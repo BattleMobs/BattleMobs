@@ -1,6 +1,7 @@
 package bernhard.scharrer.battlemobs.mobs.skeleton;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 import bernhard.scharrer.battlemobs.mobs.MobItems;
@@ -58,11 +59,14 @@ public class SkeletonItems implements MobItems {
 		switch(ability) {
 		
 		case 0:
-			return Item.createIngameItem(ABILITY_1_NAME, upgrade>=4?(upgrade>=7?Material.STONE_SWORD:Material.IRON_SWORD):Material.DIAMOND_SWORD, 0);
+			ItemStack item = Item.createIngameItem(ABILITY_1_NAME, Material.BOW, 0);
+			item.addEnchantment(Enchantment.ARROW_INFINITE, 0);
+			return item;
 		case 1:
-			return Item.createIngameItem(ABILITY_2_NAME, Material.ROTTEN_FLESH, 0);
+			
+			return Item.createIngameItem(ABILITY_2_NAME, Material.BONE, 0);
 		case 2:
-			return Item.createIngameItem(ABILITY_3_NAME, Material.MONSTER_EGG, 54);
+			return Item.createIngameItem(ABILITY_3_NAME, Material.FIREWORK, 0);
 	
 		}
 		
