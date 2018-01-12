@@ -30,6 +30,7 @@ public class ZombieListener extends MobListener {
 					if (event.getEntity() instanceof LivingEntity) {
 						LivingEntity lentity = (LivingEntity) event.getEntity();
 						lentity.addPotionEffect(tier>=4?SWORD_SLOW_2:SWORD_SLOW_1);
+						p.sendMessage("Zombie schlägt Spieler! " + p.getName());
 					}
 					
 				}
