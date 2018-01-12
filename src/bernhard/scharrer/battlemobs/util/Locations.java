@@ -21,9 +21,9 @@ public class Locations {
 		map_world = Bukkit.getWorld("Arena");
 		
 		lobby = new Location(lobby_world, 0.5f, 50.5f, 0.5f, 0, 0);
-		pig_statue = new Location(lobby_world, 7.5f, 51f, 28.5f, 135, 9);
+		pig_statue = new Location(lobby_world, 7.5f, 51f, 28.5f, 135, 0);
 		zombie_statue = new Location(lobby_world, 5.5f, 51f, 31.5f, 165, 0);
-		skeleton_statue = new Location(lobby_world, 2.5f, 51.5f, 32.5f, 180, -15);
+		skeleton_statue = new Location(lobby_world, 2.5f, 51f, 32.5f, 180, 0);
 	}
 	
 }

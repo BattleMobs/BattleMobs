@@ -21,6 +21,7 @@ public class ListenerMaster {
 		new PlayerJoinListener();
 //		new PlayerMoveListener();
 		new PlayerQuitListener();
+		new ProjectileHitListener();
 		new WeatherChangeListener();
 	}
 	
