@@ -15,15 +15,15 @@ public class ZombieItems implements MobItems {
     static final String ABILITY_3_NAME = "Inner Strengh";
     static final String ABILITY_3_DESC = "Turn into a giant for 15s.#During the duration you get resistance.#60s cooldown.";
     static final String ANILITY_1_TIER_1_NAME = "Zombie and Steel";
-    static final String ANILITY_1_TIER_1_DESC = "Increase the slowness for 1,5s and#turn the stone sword into a iron sword.";
+    static final String ANILITY_1_TIER_1_DESC = "Increase the slowness by 1.5s and#replace stone sword with a iron sword.";
     static final String ANILITY_2_TIER_1_NAME = "Gonna go fast!";
     static final String ANILITY_2_TIER_1_DESC = "Reduce the ability cooldown to 20s.";
     static final String ANILITY_3_TIER_1_NAME = "Inner Health";
     static final String ANILITY_3_TIER_1_DESC = "Get a regeneration effect while in giant form.";
     static final String ANILITY_1_TIER_2_NAME = "Why not diamond?";
-    static final String ANILITY_1_TIER_2_DESC = "Increase the slowness by 1s and#turn the iron sword into a diamond sword.";
+    static final String ANILITY_1_TIER_2_DESC = "Slow effect stays now for 2.5s and#turn the iron sword into a diamond sword.";
     static final String ANILITY_2_TIER_2_NAME = "RAGE!";
-    static final String ANILITY_2_TIER_2_DESC = "Doubles the demage you deal while rage.";
+    static final String ANILITY_2_TIER_2_DESC = "Doubles the damage you deal while rage.";
     static final String ANILITY_3_TIER_2_NAME = "True Giant!";
     static final String ANILITY_3_TIER_2_DESC = "Reduce the cooldown to 40s and#damage the player in a 15 blocks radius.";
 	
