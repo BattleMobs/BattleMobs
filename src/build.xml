@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     08.11.2017 12:04:50                                                        
+                   
+     Bernhard Scharrer                                                                
+     ====================================================================== -->
+<project name="BattleMobs" default="default">
+	<description>
+            Server Project
+    </description>
+
+	<property name="dir.buildfile" value="."/>
+	<property name="dir.workspace" value="${dir.buildfile}/.."/>
+	<property name="dist" value="."/>
+	<property name="target" value="1.8"/>
+
+	<!-- ================================= 
+          target: default              
+         ================================= -->
+	<target name="default" depends="depends" description="Server Project">
+		<jar destfile="${dir.buildfile}/../build/BattleMobs.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="bernhard.scharrer.battlemobs.BattleMobs"/>
+				<attribute name="Class-Path" value="."/>
+			</manifest>
+			<fileset dir="${dir.buildfile}/"/>
+			<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/../libs/JDBC_MySQL.jar"/>
+		</jar>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: depends                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="depends"></target>
+
+</project>

@@ -1,0 +1,26 @@
+package bernhard.scharrer.battlemobs.util;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+
+public class Locations {
+	
+	public static World lobby_world;
+	public static World map_world;
+	
+	public static Location lobby;
+	public static Location pig_statue;
+	public static Location zombie_statue;
+	
+	public static void load() {
+		
+		lobby_world = Bukkit.getWorld("Lobby");
+		map_world = Bukkit.getWorld("Arena");
+		
+		lobby = new Location(lobby_world, 0.5f, 50.5f, 0.5f, 0, 0);
+		pig_statue = new Location(lobby_world, 7.5f, 51f, 28.5f, 135, 9);
+		zombie_statue = new Location(lobby_world, 5.5f, 51f, 31.5f, 165, 0);
+	}
+	
+}
