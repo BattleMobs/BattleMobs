@@ -19,6 +19,7 @@ import org.spigotmc.event.entity.EntityDismountEvent;
 import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Scheduler;
+import bernhard.scharrer.battlemobs.util.Tier;
 import de.robingrether.idisguise.api.PlayerInteractDisguisedPlayerEvent;
 
 public class PigListener extends MobListener {
@@ -49,7 +50,7 @@ public class PigListener extends MobListener {
 				int tier = super.getMobTier(p);
 				ItemStack hand = p.getInventory().getItemInMainHand();
 				
-				if (tier != -1 && hand!=null && hand.getItemMeta()!=null&&hand.getItemMeta().getDisplayName().contains(PigItems.ABILITY_1_NAME)) {
+				if (tier != Tier.UNDEFINED && hand!=null && hand.getItemMeta()!=null&&hand.getItemMeta().getDisplayName().contains(PigItems.ABILITY_1_NAME)) {
 					
 					event.setCancelled(true);
 					if (event.getEntity() instanceof LivingEntity) {
@@ -58,7 +59,7 @@ public class PigListener extends MobListener {
 					}
 					
 					double max = p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-					double heal = PORK_DAMAGE*(tier>=4?PORK_LIFESTEAL_2:PORK_LIFESTEAL_1);
+					double heal = PORK_DAMAGE*(tier>=Tier.TIER_1_2?PORK_LIFESTEAL_2:PORK_LIFESTEAL_1);
 					
 					if (p.getHealth()+heal>=max) {
 						p.setHealth(max);
@@ -66,7 +67,7 @@ public class PigListener extends MobListener {
 						p.setHealth(p.getHealth()+heal);
 					}
 					
-					if (tier >= 7) {
+					if (tier >= Tier.TIER_1_3) {
 						event.getEntity().setFireTicks(20*PORK_BURN_SECONDS);	
 					}
 					

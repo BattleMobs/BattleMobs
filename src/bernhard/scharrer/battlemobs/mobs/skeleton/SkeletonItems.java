@@ -9,24 +9,24 @@ import bernhard.scharrer.battlemobs.util.Item;
 
 public class SkeletonItems implements MobItems {
 
-	static final String ABILITY_1_NAME = "Cursed Sword";
-    static final String ABILITY_1_DESC = "1s slow effect.";
-    static final String ABILITY_2_NAME = "Blood Rage";
-    static final String ABILITY_2_DESC = "Gives you speed effect for 5s,#with a cooldown of 30s.";
-    static final String ABILITY_3_NAME = "Inner Strengh";
-    static final String ABILITY_3_DESC = "Turn into a giant for 15s.#During the duration you get resistance.#60s cooldown.";
-    static final String ANILITY_1_TIER_1_NAME = "Zombie and Steel";
-    static final String ANILITY_1_TIER_1_DESC = "Increase the slowness by 1.5s and#replace stone sword with a iron sword.";
-    static final String ANILITY_2_TIER_1_NAME = "Gonna go fast!";
-    static final String ANILITY_2_TIER_1_DESC = "Reduce the ability cooldown to 20s.";
-    static final String ANILITY_3_TIER_1_NAME = "Inner Health";
-    static final String ANILITY_3_TIER_1_DESC = "Get a regeneration effect while in giant form.";
-    static final String ANILITY_1_TIER_2_NAME = "Why not diamond?";
-    static final String ANILITY_1_TIER_2_DESC = "Slow effect stays now for 2.5s and#turn the iron sword into a diamond sword.";
-    static final String ANILITY_2_TIER_2_NAME = "RAGE!";
-    static final String ANILITY_2_TIER_2_DESC = "Doubles the damage you deal while rage.";
-    static final String ANILITY_3_TIER_2_NAME = "True Giant!";
-    static final String ANILITY_3_TIER_2_DESC = "Reduce the cooldown to 40s and#damage the player in a 15 blocks radius.";
+	static final String ABILITY_1_NAME = "Skeleton Bow";
+    static final String ABILITY_1_DESC = "Arrow make 4 hearts damage.";
+    static final String ABILITY_2_NAME = "Bone Breaker";
+    static final String ABILITY_2_DESC = "Rotates the heads of enemies in a#15block radius by a random amount#and deals 1 heart damage per spin.";
+    static final String ABILITY_3_NAME = "Sky Rocket";
+    static final String ABILITY_3_DESC = "Let's you launch into the sky.";
+    static final String ANILITY_1_TIER_1_NAME = "Bow++";
+    static final String ANILITY_1_TIER_1_DESC = "Adds a FLASH-Effect and deals#1 heart more damage.";
+    static final String ANILITY_2_TIER_1_NAME = "Twice Spins, Twice Fun";
+    static final String ANILITY_2_TIER_1_DESC = "Makes a second spin after 1 second.";
+    static final String ANILITY_3_TIER_1_NAME = "Fresh Air";
+    static final String ANILITY_3_TIER_1_DESC = "Regenrate a little during jump.";
+    static final String ANILITY_1_TIER_2_NAME = "Little Confusion?";
+    static final String ANILITY_1_TIER_2_DESC = "Rotate enemies head randomly#on succesfull hit.";
+    static final String ANILITY_2_TIER_2_NAME = "More Spins!";
+    static final String ANILITY_2_TIER_2_DESC = "+2 extra spins in a 1s rythmus.";
+    static final String ANILITY_3_TIER_2_NAME = "BOOM!";
+    static final String ANILITY_3_TIER_2_DESC = "Blast away nearby enmies#and rotate their head.";
 	
 	@Override
 	public ItemStack getMobInventoryItem(int tier) {
