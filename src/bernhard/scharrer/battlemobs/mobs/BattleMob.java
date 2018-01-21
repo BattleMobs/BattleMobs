@@ -1,5 +1,7 @@
 package bernhard.scharrer.battlemobs.mobs;
 
+import org.bukkit.entity.Player;
+
 import de.robingrether.idisguise.disguise.MobDisguise;
 
 public abstract class BattleMob {
@@ -18,7 +20,8 @@ public abstract class BattleMob {
 
 	protected abstract MobStatue generateStatue();
 	public abstract MobDisguise generateDisguise();
-
+	public abstract void init(Player p);
+	
 	public MobType getType() {
 		return type;
 	}

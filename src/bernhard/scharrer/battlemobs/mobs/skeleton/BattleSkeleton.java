@@ -1,5 +1,7 @@
 package bernhard.scharrer.battlemobs.mobs.skeleton;
 
+import org.bukkit.entity.Player;
+
 import bernhard.scharrer.battlemobs.mobs.BattleMob;
 import bernhard.scharrer.battlemobs.mobs.MobStatue;
 import bernhard.scharrer.battlemobs.mobs.MobType;
@@ -21,6 +23,11 @@ public class BattleSkeleton extends BattleMob {
 	@Override
 	public MobDisguise generateDisguise() {
 		return new AgeableDisguise(DisguiseType.SKELETON);
+	}
+
+	@Override
+	public void init(Player p) {
+		
 	}
 	
 	

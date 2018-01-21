@@ -1,18 +1,17 @@
 package bernhard.scharrer.battlemobs.mobs.zombie;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import bernhard.scharrer.battlemobs.mobs.MobListener;
-import bernhard.scharrer.battlemobs.mobs.pig.PigItems;
 import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Scheduler;
 import bernhard.scharrer.battlemobs.util.Tier;
@@ -57,7 +56,7 @@ public class ZombieListener extends MobListener {
 	@EventHandler
 	public void bloodRage(PlayerInteractEvent event) {
 		
-		if(super.valid(event.getPlayer().getWorld())) {
+		if(super.valid(event.getPlayer())) {
 			
 			Player p = event.getPlayer();
 			int tier = super.getMobTier(p);
@@ -72,10 +71,14 @@ public class ZombieListener extends MobListener {
 						new Cooldown(p, 1, tier >= Tier.TIER_2_2? BLOODRAGE_COOLDOWN_TIER1:BLOODRAGE_COOLDOWN_TIER2);
 						
 						p.setWalkSpeed(BLOODRAGE_SPEED);
+						p.playSound(p.getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_DOOR_WOOD, 1, 1);
 						
 						Scheduler.schedule(5*20, ()-> {
-
-							p.setWalkSpeed(0.4f);
+							
+							if (super.valid(p)) {
+								p.setWalkSpeed(BattleZombie.ZOMBIE_WALSPEED);
+								p.playSound(p.getLocation(), Sound.ENTITY_ZOMBIE_INFECT, 1, 1);
+							}
 							
 						});
 

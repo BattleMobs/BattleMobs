@@ -67,6 +67,7 @@ public class MobInventoryHandler extends Listener {
 							for (int n=0;n<3&&n<tier;n++) {
 								p.getInventory().setItem(n, mob.getItems().getAbilityItem(n, (tier-(n+1))/3));
 							}
+							mob.init(p);
 							BattleMobs.getAPI().disguise(p, mob.generateDisguise());
 							
 						}

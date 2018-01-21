@@ -19,6 +19,8 @@ import de.robingrether.idisguise.management.DisguiseManager;
 
 public class PlayerUtils {
 	
+	public static final float DEFAULT_WALKSPEED = 0.4f;
+	
 	public static void reset(Player p) {
 		p.getInventory().clear();
 		p.getInventory().setHelmet(null);
@@ -32,7 +34,7 @@ public class PlayerUtils {
 		p.setLevel(0);
 		p.setFireTicks(0);
 		p.setFlying(false);
-		p.setWalkSpeed(0.4f);
+		p.setWalkSpeed(DEFAULT_WALKSPEED);
 		p.setFoodLevel(20);
 		p.closeInventory();
 		changeHealth(p, 20.0);
