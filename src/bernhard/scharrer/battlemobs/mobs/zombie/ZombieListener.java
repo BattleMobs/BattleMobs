@@ -15,14 +15,16 @@ import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.mobs.pig.PigItems;
 import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Scheduler;
+import bernhard.scharrer.battlemobs.util.Tier;
 
 public class ZombieListener extends MobListener {
 	
 	private static final PotionEffect SWORD_SLOW_1 = new PotionEffect(PotionEffectType.SLOW, 20, 2);
 	private static final PotionEffect SWORD_SLOW_2 = new PotionEffect(PotionEffectType.SLOW, 30, 2);
 
-	private static final float BLOODRAGE_SPEED = 0.7f;
-	private static final int BLOODRAGE_COOLDOWN = 30;
+	private static final float BLOODRAGE_SPEED = 1f;
+	private static final int BLOODRAGE_COOLDOWN_TIER1 = 30;
+	private static final int BLOODRAGE_COOLDOWN_TIER2 = 20;
 	private static final int BLOODRAGE_DURATION = 5;
 	
 	
@@ -53,7 +55,7 @@ public class ZombieListener extends MobListener {
 	}
 	
 	@EventHandler
-	public void BloodRage(PlayerInteractEvent event) {
+	public void bloodRage(PlayerInteractEvent event) {
 		
 		if(super.valid(event.getPlayer().getWorld())) {
 			
@@ -67,7 +69,7 @@ public class ZombieListener extends MobListener {
 					
 					if (hand.getItemMeta().getDisplayName().contains(ZombieItems.ABILITY_2_NAME)) {
 						
-						new Cooldown(p, 1, tier >= 5? 20:30);
+						new Cooldown(p, 1, tier >= Tier.TIER_2_2? BLOODRAGE_COOLDOWN_TIER1:BLOODRAGE_COOLDOWN_TIER2);
 						
 						p.setWalkSpeed(BLOODRAGE_SPEED);
 						
@@ -86,7 +88,6 @@ public class ZombieListener extends MobListener {
 			}
 			
 		}
-		
 		
 		
 	}
