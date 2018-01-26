@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import bernhard.scharrer.battlemobs.data.PlayerData;
 import bernhard.scharrer.battlemobs.mobs.pig.BattlePig;
+import bernhard.scharrer.battlemobs.mobs.sheep.BattleSheep;
 import bernhard.scharrer.battlemobs.mobs.skeleton.BattleSkeleton;
 import bernhard.scharrer.battlemobs.mobs.zombie.BattleZombie;
 
@@ -25,6 +26,7 @@ public class MobMaster {
 		battlemobs.add(new BattlePig());
 		battlemobs.add(new BattleZombie());
 		battlemobs.add(new BattleSkeleton());
+		battlemobs.add(new BattleSheep());
 		
 	}
 	
