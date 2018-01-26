@@ -13,20 +13,20 @@ public class SkeletonItems implements MobItems {
     static final String ABILITY_1_DESC = "Arrow make 4 hearts damage.";
     static final String ABILITY_2_NAME = "Bone Breaker";
     static final String ABILITY_2_DESC = "Rotates the heads of enemies in a#15block radius by a random amount#and deals 1 heart damage per spin.";
-    static final String ABILITY_3_NAME = "Sky Rocket";
-    static final String ABILITY_3_DESC = "Let's you launch into the sky.";
+    static final String ABILITY_3_NAME = "Ride of Death";
+    static final String ABILITY_3_DESC = "Let's you ride a dead horse.#While riding you regenrate a little.";
     static final String ANILITY_1_TIER_1_NAME = "Bow++";
     static final String ANILITY_1_TIER_1_DESC = "Adds a FLASH-Effect and deals#1 heart more damage.";
     static final String ANILITY_2_TIER_1_NAME = "Twice Spins, Twice Fun";
     static final String ANILITY_2_TIER_1_DESC = "Makes a second spin after 1 second.";
-    static final String ANILITY_3_TIER_1_NAME = "Fresh Air";
-    static final String ANILITY_3_TIER_1_DESC = "Regenrate a little during jump.";
+    static final String ANILITY_3_TIER_1_NAME = "Better Conditions";
+    static final String ANILITY_3_TIER_1_DESC = "While riding you deal twice as much damage.";
     static final String ANILITY_1_TIER_2_NAME = "Little Confusion?";
     static final String ANILITY_1_TIER_2_DESC = "Rotate enemies head randomly#on succesfull hit.";
     static final String ANILITY_2_TIER_2_NAME = "More Spins!";
     static final String ANILITY_2_TIER_2_DESC = "+2 extra spins in a 1s rythmus.";
-    static final String ANILITY_3_TIER_2_NAME = "BOOM!";
-    static final String ANILITY_3_TIER_2_DESC = "Blast away nearby enmies#and rotate their head.";
+    static final String ANILITY_3_TIER_2_NAME = "U can't see me.";
+    static final String ANILITY_3_TIER_2_DESC = "Succesfully hits while riding#blinds your enemies for 3s.";
 	
 	@Override
 	public ItemStack getMobInventoryItem(int tier) {
@@ -63,11 +63,9 @@ public class SkeletonItems implements MobItems {
 			item.addEnchantment(Enchantment.ARROW_INFINITE, 0);
 			return item;
 		case 1:
-			
 			return Item.createIngameItem(ABILITY_2_NAME, Material.BONE, 0);
 		case 2:
-			return Item.createIngameItem(ABILITY_3_NAME, Material.FIREWORK, 0);
-	
+			return Item.createIngameItem(ABILITY_3_NAME, Material.DIAMOND_BARDING, 0);
 		}
 		
 		return null;
