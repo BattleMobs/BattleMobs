@@ -10,7 +10,7 @@ import bernhard.scharrer.battlemobs.util.Item;
 public class SkeletonItems implements MobItems {
 
 	static final String ABILITY_1_NAME = "Skeleton Bow";
-    static final String ABILITY_1_DESC = "Arrow make 4 hearts damage.";
+    static final String ABILITY_1_DESC = "Arrow make 3 hearts damage.";
     static final String ABILITY_2_NAME = "Bone Breaker";
     static final String ABILITY_2_DESC = "Rotates the heads of enemies in a#15block radius by a random amount#and deals 1 heart damage per spin.";
     static final String ABILITY_3_NAME = "Ride of Death";
@@ -60,7 +60,7 @@ public class SkeletonItems implements MobItems {
 		
 		case 0:
 			ItemStack item = Item.createIngameItem(ABILITY_1_NAME, Material.BOW, 0);
-			item.addEnchantment(Enchantment.ARROW_INFINITE, 0);
+			item.addEnchantment(Enchantment.ARROW_INFINITE, 1);
 			return item;
 		case 1:
 			return Item.createIngameItem(ABILITY_2_NAME, Material.BONE, 0);

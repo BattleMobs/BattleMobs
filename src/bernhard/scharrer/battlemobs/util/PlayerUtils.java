@@ -15,7 +15,6 @@ import bernhard.scharrer.battlemobs.data.PlayerData;
 import bernhard.scharrer.battlemobs.listeners.PlayerDeathListener;
 import bernhard.scharrer.battlemobs.mobs.MobMaster;
 import bernhard.scharrer.battlemobs.mobs.MobType;
-import de.robingrether.idisguise.management.DisguiseManager;
 
 public class PlayerUtils {
 	
@@ -39,7 +38,6 @@ public class PlayerUtils {
 		p.closeInventory();
 		changeHealth(p, 20.0);
 		
-		DisguiseManager.undisguise(p);
 		
 		updateEXP(p);
 		
