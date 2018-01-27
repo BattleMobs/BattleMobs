@@ -74,7 +74,7 @@ public class PlayerDeathListener extends Listener {
 		
 		Scoreboard.updateScoreboard(p);
 		
-		if (k != null) {
+		if (k != null && k != p) {
 			
 			PlayerData k_data = MobMaster.getPlayerData(k);
 			MobData k_mob = k_data.getCurrentData();

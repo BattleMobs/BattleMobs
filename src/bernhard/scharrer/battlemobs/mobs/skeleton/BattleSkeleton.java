@@ -23,7 +23,7 @@ public class BattleSkeleton extends BattleMob {
 
 	@Override
 	public MobDisguise generateDisguise() {
-		return (MobDisguise) DisguiseType.SKELETON.newInstance();
+		return (MobDisguise) DisguiseType.SKELETON.newInstance(); 
 	}
 
 	@Override
