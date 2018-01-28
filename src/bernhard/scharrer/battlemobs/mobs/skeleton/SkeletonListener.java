@@ -1,15 +1,17 @@
 package bernhard.scharrer.battlemobs.mobs.skeleton;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.SkeletonHorse;
 import org.bukkit.event.EventHandler;
@@ -40,14 +42,15 @@ public class SkeletonListener extends MobListener {
 	private static final PotionEffect FLASH = new PotionEffect(PotionEffectType.BLINDNESS, 20, 0);
 
 	private static final double BONE_BREAKER_RADIUS = 15;
-
 	private static final double BONE_BREAKER_DAMAGE = 0;
-
 	private static final int BONE_BREAKER_COOLDOWN = 30;
 
-	private static final int RIDE_OF_DEATH_COOLDOWN = 6;
-
+	private static final int RIDE_OF_DEATH_COOLDOWN = 60;
 	private static final ItemStack RIDE_OF_DEATH_SADDLE = Item.createIngameItem("Saddle", Material.SADDLE, 0);
+	private static final PotionEffect RIDE_OF_DEATH_BLIND = new PotionEffect(PotionEffectType.BLINDNESS, 60, 0);
+	private static final double RIDE_OF_DEATH_HEAL = 2;
+	
+	private static List<Player> riding = new ArrayList<>();
 	
 	@EventHandler
 	public void onLaunch(EntityShootBowEvent event) {
@@ -63,15 +66,14 @@ public class SkeletonListener extends MobListener {
 							
 							double damage = ARROW_DAMAGE;
 							if (tier>=Tier.TIER_1_2) damage += ARROW_BONUS;
-							for (Entity e : p.getPassengers()) {
-								if (e instanceof Horse) {
-									damage *= ARROW_MULTIPLIER;
-									break;
+							if (p.isInsideVehicle()) {
+								if (p.getVehicle() instanceof SkeletonHorse) {
+									if (tier >= Tier.TIER_3_2) damage *= ARROW_MULTIPLIER;
 								}
 							}
 							
 							event.getProjectile().setCustomNameVisible(false);
-							event.getProjectile().setCustomName(ARROW_TAG_HEADER+p.getName()+";"+damage+";"+(tier>=Tier.TIER_1_2)+";"+(tier>=Tier.TIER_1_3));
+							event.getProjectile().setCustomName(ARROW_TAG_HEADER+p.getName()+";"+damage+";"+(tier>=Tier.TIER_1_2)+";"+(tier>=Tier.TIER_1_3)+";"+(tier>=Tier.TIER_3_3));
 							event.getBow().setDurability((short) (Material.BOW.getMaxDurability()-1));
 						}
 					}
@@ -106,12 +108,16 @@ public class SkeletonListener extends MobListener {
 					if (shooter != null) p.damage(Double.parseDouble(data[2]), shooter);
 					else p.damage(Double.parseDouble(data[2]));
 					
-					if (Boolean.parseBoolean(data[3])) {
+					if (Boolean.parseBoolean(data[3]) && !Boolean.parseBoolean(data[5])) {
 						p.addPotionEffect(FLASH);
 					}
 					
 					if (Boolean.parseBoolean(data[4])) {
 						rotateHead(p);
+					}
+					
+					if (Boolean.parseBoolean(data[5])) {
+						p.addPotionEffect(RIDE_OF_DEATH_BLIND);
 					}
 					
 				}
@@ -150,7 +156,6 @@ public class SkeletonListener extends MobListener {
 							}
 							
 						}
-						spin(p, spins,flash);
 						
 					}
 					
@@ -167,6 +172,21 @@ public class SkeletonListener extends MobListener {
 						horse.setTamed(true);
 						horse.getInventory().setItem(0, RIDE_OF_DEATH_SADDLE);
 						horse.addPassenger(p);
+						
+						new Task(0, 1) {
+							
+							public void run() {
+								if (SkeletonListener.this.valid(p) && p.isInsideVehicle() && p.getVehicle() instanceof SkeletonHorse) {
+									if (p.getHealth()+RIDE_OF_DEATH_HEAL>=p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()) {
+										p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+									} else {
+										p.setHealth(p.getHealth()+RIDE_OF_DEATH_HEAL);
+									}
+								} else {
+									cancel();
+								}
+							}
+						};
 						
 					}
 					
@@ -202,6 +222,8 @@ public class SkeletonListener extends MobListener {
 						if (flash) enemy.addPotionEffect(FLASH);
 					}
 					
+				} else {
+					 cancel();
 				}
 				
 			}
