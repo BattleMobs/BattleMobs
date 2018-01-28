@@ -8,8 +8,10 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.SkeletonHorse;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -18,11 +20,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.spigotmc.event.entity.EntityDismountEvent;
 
 import bernhard.scharrer.battlemobs.mobs.MobListener;
-import bernhard.scharrer.battlemobs.mobs.pig.PigItems;
 import bernhard.scharrer.battlemobs.util.Cooldown;
+import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Locations;
+import bernhard.scharrer.battlemobs.util.Task;
 import bernhard.scharrer.battlemobs.util.Tier;
 
 public class SkeletonListener extends MobListener {
@@ -36,6 +40,14 @@ public class SkeletonListener extends MobListener {
 	private static final PotionEffect FLASH = new PotionEffect(PotionEffectType.BLINDNESS, 20, 0);
 
 	private static final double BONE_BREAKER_RADIUS = 15;
+
+	private static final double BONE_BREAKER_DAMAGE = 0;
+
+	private static final int BONE_BREAKER_COOLDOWN = 30;
+
+	private static final int RIDE_OF_DEATH_COOLDOWN = 6;
+
+	private static final ItemStack RIDE_OF_DEATH_SADDLE = Item.createIngameItem("Saddle", Material.SADDLE, 0);
 	
 	@EventHandler
 	public void onLaunch(EntityShootBowEvent event) {
@@ -117,23 +129,44 @@ public class SkeletonListener extends MobListener {
 			ItemStack hand = p.getInventory().getItemInMainHand();
 			
 			if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-				if (tier != -1 && hand!=null && hand.getItemMeta()!=null) {
+				if (tier != Tier.UNDEFINED && hand!=null && hand.getItemMeta()!=null && hand.getItemMeta().getDisplayName()!=null) {
 					
 					/*
 					 * bone breaker
 					 */
 					if (hand.getItemMeta().getDisplayName().contains(SkeletonItems.ABILITY_2_NAME)) {
 						
-						new Cooldown(p, 1, 30);
+						new Cooldown(p, 1, BONE_BREAKER_COOLDOWN);
+						int spins = 1;
+						spins += (tier>=Tier.TIER_2_2?1:0);
+						spins += (tier>=Tier.TIER_2_3?2:0);
+						boolean flash = tier>=Tier.TIER_2_3;
 						
 						for (Entity e : p.getNearbyEntities(BONE_BREAKER_RADIUS, BONE_BREAKER_RADIUS, BONE_BREAKER_RADIUS)) {
 							
 							if (e instanceof Player) {
 								Player enemy = (Player) e;
-								enemy.damage(arg0);
+								spin(enemy, spins, flash);
 							}
 							
 						}
+						spin(p, spins,flash);
+						
+					}
+					
+					/*
+					 * ride of death
+					 */
+					if (hand.getItemMeta().getDisplayName().contains(SkeletonItems.ABILITY_3_NAME)) {
+						
+						new Cooldown(p, 2, RIDE_OF_DEATH_COOLDOWN);
+						
+						SkeletonHorse horse = (SkeletonHorse) Locations.map_world.spawnEntity(p.getLocation(), EntityType.SKELETON_HORSE);
+						horse.setAdult();
+						horse.setBreed(true);
+						horse.setTamed(true);
+						horse.getInventory().setItem(0, RIDE_OF_DEATH_SADDLE);
+						horse.addPassenger(p);
 						
 					}
 					
@@ -143,6 +176,41 @@ public class SkeletonListener extends MobListener {
 		}
 	}
 	
+	@EventHandler
+	public void onExit(EntityDismountEvent event) {
+		if (super.valid(event.getDismounted())) {
+			if (event.getDismounted() instanceof SkeletonHorse) {
+				event.getDismounted().remove();
+			}
+		}
+	}
+	
+	private void spin(Player enemy, int amount, boolean flash) {
+	
+		new Task(0,1) {
+			
+			private int spins = 0;
+			
+			public void run() {
+				
+				if (spins++ < amount) {
+					
+					if (SkeletonListener.this.valid(enemy)) {
+						rotateHead(enemy);
+						enemy.damage(BONE_BREAKER_DAMAGE);
+						Locations.map_world.playSound(enemy.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
+						if (flash) enemy.addPotionEffect(FLASH);
+					}
+					
+				}
+				
+			}
+		};
+		
+		
+		
+	}
+
 	private void rotateHead(Player p) {
 		Locations.map_world.playSound(p.getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_DOOR_WOOD, 1, 1);
 		int yaw = random.nextInt(360);

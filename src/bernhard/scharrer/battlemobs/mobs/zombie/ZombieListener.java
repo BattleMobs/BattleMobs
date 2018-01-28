@@ -64,7 +64,7 @@ public class ZombieListener extends MobListener {
 
 			if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 				
-				if (tier != -1 && hand!=null && hand.getItemMeta()!=null) {
+				if (tier != -1 && hand!=null && hand.getItemMeta()!=null && hand.getItemMeta().getDisplayName()!=null) {
 					
 					if (hand.getItemMeta().getDisplayName().contains(ZombieItems.ABILITY_2_NAME)) {
 						

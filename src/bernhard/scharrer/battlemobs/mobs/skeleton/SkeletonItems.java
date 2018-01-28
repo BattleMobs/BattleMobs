@@ -24,7 +24,7 @@ public class SkeletonItems implements MobItems {
     static final String ANILITY_1_TIER_2_NAME = "Little Confusion?";
     static final String ANILITY_1_TIER_2_DESC = "Rotate enemies head randomly#on succesfull hit.";
     static final String ANILITY_2_TIER_2_NAME = "More Spins!";
-    static final String ANILITY_2_TIER_2_DESC = "+2 extra spins in a 1s rythmus.";
+    static final String ANILITY_2_TIER_2_DESC = "+2 extra spins in a 1s rythmus##+adds a little flash everyetime#enemy is rotating.";
     static final String ANILITY_3_TIER_2_NAME = "U can't see me.";
     static final String ANILITY_3_TIER_2_DESC = "Succesfully hits while riding#blinds your enemies for 3s.";
 	
