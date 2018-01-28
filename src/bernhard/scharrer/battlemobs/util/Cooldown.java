@@ -22,6 +22,8 @@ public class Cooldown {
 	
 	public Cooldown(Player p, int slot, int cooldown) {
 		
+		p.playSound(p.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 10, 10);
+		
 		this.cooldown = cooldown;
 		this.item = p.getInventory().getItem(slot);
 		this.instance = this;
