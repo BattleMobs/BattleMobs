@@ -25,7 +25,7 @@ public class SheepItems implements MobItems {
 	static final String ANILITY_2_TIER_2_NAME = "Get Away From My Lawn!";
 	static final String ANILITY_2_TIER_2_DESC = "Roses transform to rosebushes and they spray their thorns!";
 	static final String ANILITY_3_TIER_2_NAME = "Cake Heaven";
-	static final String ANILITY_3_TIER_2_DESC = "Adds a Life regneration.";
+	static final String ANILITY_3_TIER_2_DESC = "Adds a Life regeneration.";
 
 	@Override
 	public ItemStack getMobInventoryItem(int tier) {
