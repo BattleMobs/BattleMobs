@@ -17,7 +17,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import bernhard.scharrer.battlemobs.BattleMobs;
 import bernhard.scharrer.battlemobs.data.MobData;
 import bernhard.scharrer.battlemobs.data.PlayerData;
 import bernhard.scharrer.battlemobs.mobs.BattleMob;
@@ -129,29 +128,13 @@ public class PlayerDeathListener extends Listener {
 			if (p!=null&&p.isOnline()&&p.getWorld().getName().equals(Locations.map_world.getName())&&p.getGameMode()==GameMode.SPECTATOR) {
 				BattleMob mob = MobMaster.getBattleMob(p_mob.getType());
 				PlayerUtils.reset(p);
-				MapHandler.teleportIntoMap(p);
-				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
-				
-				int tier = p_mob.getTier();
-				
-				for (int n=0;n<3&&n<tier;n++) {
-					p.getInventory().setItem(n, mob.getItems().getAbilityItem(n, (tier-(n+1))/3));
-				}
-				mob.init(p);
-				BattleMobs.getAPI().disguise(p, mob.generateDisguise());
+				p_data.setCurrent(mob.getType());
+				MapHandler.teleportIntoMap(p, p_mob.getTier(), mob);
 				
 			}
 			Scheduler.cancel(action);
 			
 		});
-		
-//		p_data.setCurrent(null);
-//		p.teleport(Locations.lobby);
-//		PlayerUtils.reset(p);
-//		
-//		p.getInventory().setItem(1, Item.createItem("§b§lINFO", "", Material.NETHER_STAR, 1, 0));
-//		p.getInventory().setItem(4, Item.createItem("§b§lTELEPORTER", "", Material.COMPASS, 1, 0));
-//		p.getInventory().setItem(7, Item.createItem("§b§lComing soon!", "", Material.NETHER_STAR, 1, 0));
 		
 	}
 	

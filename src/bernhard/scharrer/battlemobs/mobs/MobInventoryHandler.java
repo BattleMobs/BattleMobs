@@ -7,7 +7,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import bernhard.scharrer.battlemobs.BattleMobs;
 import bernhard.scharrer.battlemobs.data.MobData;
 import bernhard.scharrer.battlemobs.data.PlayerData;
 import bernhard.scharrer.battlemobs.listeners.Listener;
@@ -59,16 +58,8 @@ public class MobInventoryHandler extends Listener {
 						else if (item.getType()==Material.NETHER_STAR && item.getItemMeta().getDisplayName().startsWith(HEADER)) {
 							
 							PlayerUtils.reset(p);
-							MapHandler.teleportIntoMap(p);
 							data.setCurrent(mob.getType());
-							
-							int tier = data.getCurrentData().getTier();
-							
-							for (int n=0;n<3&&n<tier;n++) {
-								p.getInventory().setItem(n, mob.getItems().getAbilityItem(n, (tier-(n+1))/3));
-							}
-							mob.init(p);
-							BattleMobs.getAPI().disguise(p, mob.generateDisguise());
+							MapHandler.teleportIntoMap(p, data.getMobData(mob.getType()).getTier(), mob);
 							
 						}
 						

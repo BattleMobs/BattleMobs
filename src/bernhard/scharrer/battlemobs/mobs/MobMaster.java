@@ -23,6 +23,7 @@ public class MobMaster {
 	public static void register() {
 		
 		new MobInventoryHandler();
+		new ItemUtilListener();
 		
 		battlemobs.add(new BattlePig());
 		battlemobs.add(new BattleZombie());

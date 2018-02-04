@@ -1,7 +1,5 @@
 package bernhard.scharrer.battlemobs.mobs.skeleton;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -50,8 +48,6 @@ public class SkeletonListener extends MobListener {
 	private static final PotionEffect RIDE_OF_DEATH_BLIND = new PotionEffect(PotionEffectType.BLINDNESS, 60, 0);
 	private static final double RIDE_OF_DEATH_HEAL = 2;
 	
-	private static List<Player> riding = new ArrayList<>();
-	
 	@EventHandler
 	public void onLaunch(EntityShootBowEvent event) {
 		
@@ -75,6 +71,7 @@ public class SkeletonListener extends MobListener {
 							event.getProjectile().setCustomNameVisible(false);
 							event.getProjectile().setCustomName(ARROW_TAG_HEADER+p.getName()+";"+damage+";"+(tier>=Tier.TIER_1_2)+";"+(tier>=Tier.TIER_1_3)+";"+(tier>=Tier.TIER_3_3));
 							event.getBow().setDurability((short) (Material.BOW.getMaxDurability()-1));
+							
 						}
 					}
 				}

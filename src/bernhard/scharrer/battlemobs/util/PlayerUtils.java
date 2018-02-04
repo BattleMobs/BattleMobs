@@ -7,12 +7,9 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.potion.PotionEffectType;
 
 import bernhard.scharrer.battlemobs.data.Database;
 import bernhard.scharrer.battlemobs.data.PlayerData;
-import bernhard.scharrer.battlemobs.listeners.PlayerDeathListener;
 import bernhard.scharrer.battlemobs.mobs.MobMaster;
 import bernhard.scharrer.battlemobs.mobs.MobType;
 
@@ -43,10 +40,17 @@ public class PlayerUtils {
 		
 	}
 	
+	public static void receiveLobbyItems(Player p) {
+		p.getInventory().setItem(1, Item.createItem("§b§lINFO", "", Material.NETHER_STAR, 1, 0));
+		p.getInventory().setItem(4, Item.createItem("§b§lTELEPORTER", "", Material.COMPASS, 1, 0));
+		p.getInventory().setItem(7, Item.createItem("§b§lComing soon!", "", Material.NETHER_STAR, 1, 0));
+	}
+	
 	public static void teleportToLobby(Player p) {
 		reset(p);
 		p.sendMessage("§aYou have been teleported to the lobby.");
 		p.teleport(Locations.lobby);
+		receiveLobbyItems(p);
 	}
 	
 	public static void updateEXP(Player p) {
@@ -74,34 +78,6 @@ public class PlayerUtils {
 		if (heal+p.getHealth()<p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
 			p.setHealth(p.getHealth()+heal);
 		} else p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-	}
-	
-	public static void damage(Player p, EntityDamageByEntityEvent e, double damage) {
-		e.setDamage(0);
-		boolean crit = false;
-		if (e.getDamager()instanceof Player) {
-			Player k = (Player) e.getDamager();
-			if(k.getVelocity().getY() < 0 &&
-					!k.isOnGround() &&
-					!k.getLocation().getBlock().getType().equals(Material.WATER) &&
-					!k.getLocation().getBlock().getType().equals(Material.LADDER) &&
-					!k.getLocation().getBlock().getType().equals(Material.VINE) &&
-					!k.getLocation().getBlock().getRelative(0, 1, 0).getType().equals(Material.VINE) &&
-					!k.hasPotionEffect(PotionEffectType.BLINDNESS) &&
-					k.getVehicle() == null ) {
-				crit = true;
-			}
-		}
-		if (p.getHealth()-(crit?damage*1.6:damage)>=0.5) {
-			p.setHealth(p.getHealth()-damage);
-		} else PlayerDeathListener.kill(p, e);
-	}
-	
-	public static void damage(Player p, double damage) {
-		if (p.getHealth()-damage>=0.5) {
-			p.setHealth(p.getHealth()-damage);
-			p.damage(0);
-		} else PlayerDeathListener.kill(p, null);
 	}
 	
 	public static void insertIntoDB(Player p) {

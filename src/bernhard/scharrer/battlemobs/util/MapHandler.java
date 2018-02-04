@@ -5,7 +5,12 @@ import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+
+import bernhard.scharrer.battlemobs.BattleMobs;
+import bernhard.scharrer.battlemobs.mobs.BattleMob;
+import bernhard.scharrer.battlemobs.mobs.MobItems;
 
 public class MapHandler {
 	
@@ -19,9 +24,20 @@ public class MapHandler {
 		
 	}
 	
-	public static void teleportIntoMap(Player p) {
+	public static void teleportIntoMap(Player p, int tier, BattleMob mob) {
 		Location loc = locations.get(random.nextInt(locations.size()));
 		p.teleport(loc);
+		
+		p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
+		
+		for (int n=0;n<3&&n<tier;n++) {
+			p.getInventory().setItem(n, mob.getItems().getAbilityItem(n, (tier-(n+1))/3));
+		}
+		p.getInventory().setItem(7, MobItems.AUTO_RESPAWN_ON);
+		p.getInventory().setItem(8, MobItems.LOBBY);
+		mob.init(p);
+		BattleMobs.getAPI().disguise(p, mob.generateDisguise());
+		
 	}
 	
 }

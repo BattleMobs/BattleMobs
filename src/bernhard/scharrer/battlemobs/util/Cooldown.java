@@ -40,7 +40,6 @@ public class Cooldown {
 				if (p.getInventory().getItem(slot)!=null && p.getInventory().getItem(slot).getType()==MATERIAL_COOLDOWN) {
 					
 					p.getInventory().getItem(slot).setAmount(this.cooldown);
-					p.updateInventory();
 					
 				}
 			} else {

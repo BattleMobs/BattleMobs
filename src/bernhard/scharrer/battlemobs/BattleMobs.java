@@ -11,6 +11,7 @@ import bernhard.scharrer.battlemobs.mobs.MobMaster;
 import bernhard.scharrer.battlemobs.properties.PluginProperties;
 import bernhard.scharrer.battlemobs.util.Locations;
 import bernhard.scharrer.battlemobs.util.MapHandler;
+import bernhard.scharrer.battlemobs.util.Teleporter;
 import de.robingrether.idisguise.api.DisguiseAPI;
 
 public class BattleMobs extends JavaPlugin {
@@ -32,6 +33,7 @@ public class BattleMobs extends JavaPlugin {
 		MapHandler.loadMap();
 		Listeners.init();
 		Commands.init();
+		Teleporter.init();
 		MobMaster.register();
 		
 		for (Player p : Bukkit.getOnlinePlayers()) p.kickPlayer("§8[§6BattleMobs§8] §7Server is restarting!");
