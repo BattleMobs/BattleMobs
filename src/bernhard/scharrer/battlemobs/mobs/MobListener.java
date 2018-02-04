@@ -29,7 +29,7 @@ public class MobListener extends Listener {
 	}
 
 	public boolean valid(Player p) {
-		return p.getWorld().getName().equals(Locations.map_world.getName());
+		return valid((Entity)p)&&p.getWorld().getName().equals(Locations.map_world.getName());
 	}
 	
 	public boolean valid(Entity entity) {

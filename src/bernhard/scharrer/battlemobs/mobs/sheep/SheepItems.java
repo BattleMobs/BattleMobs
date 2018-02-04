@@ -60,7 +60,7 @@ public class SheepItems implements MobItems {
 		case 0:
 			return Item.createIngameItem(ABILITY_1_NAME, Material.SHEARS, 0);
 		case 1:
-			return Item.createIngameItem(ABILITY_2_NAME, Material.DEAD_BUSH, 1);
+			return Item.createIngameItem(ABILITY_2_NAME, Material.LONG_GRASS, 1);
 		case 2:
 			return Item.createIngameItem(ABILITY_3_NAME, Material.WHEAT, 0);
 	
