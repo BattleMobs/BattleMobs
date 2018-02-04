@@ -13,7 +13,7 @@ public class PigItems implements MobItems {
 	static final String ABILITY_2_NAME = "Pig Hook";
 	static final String ABILITY_2_DESC = "Hook all players in a 15 block radius towards you.";
 	static final String ABILITY_3_NAME = "Saddle Down";
-	static final String ABILITY_3_DESC = "Picks up an enemy by RIGHT-clicking him/her.#As long as the enemy stays on you#he/she gets 2 hearts damage/s.";
+	static final String ABILITY_3_DESC = "Picks up an enemy by RIGHT-clicking him/her.#As long as the enemy remains on you#he/she gets 2 hearts damage/s.";
 	static final String ANILITY_1_TIER_1_NAME = "Not enough?";
 	static final String ANILITY_1_TIER_1_DESC = "Increases lifesteal-effect by 20%.#Total: 40%";
 	static final String ANILITY_2_TIER_1_NAME = "Pain? Why not.";
