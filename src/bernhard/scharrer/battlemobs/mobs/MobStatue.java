@@ -22,9 +22,10 @@ public abstract class MobStatue extends Listener {
 	private EntityInsentient entity;
 	private BattleMob mob;
 
-	public MobStatue(BattleMob mob, Location loc) {
+	public MobStatue(BattleMob mob) {
 
 		this.mob = mob;
+		Location loc = mob.getType().getLocation();
 		entity = generateEntity(((CraftWorld)(loc.getWorld())).getHandle());
 		entity.setCustomName(HEADER+mob.getType().toString()+"§7 Level: "+mob.getType().getLevel()+TRAILER);
 		entity.setCustomNameVisible(true);

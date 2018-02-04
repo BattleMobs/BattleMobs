@@ -26,8 +26,8 @@ public class Locations {
 		pig_statue = new Location(lobby_world, 7.5f, 51f, 28.5f, 135, 0);
 		zombie_statue = new Location(lobby_world, 5.5f, 51f, 31.5f, 165, 0);
 		skeleton_statue = new Location(lobby_world, 2.5f, 51f, 32.5f, 180, 0);
-		sheep_statue = new Location(lobby_world, -1.5f, 51.0f, 32.5f, 180, 0);
-		spider_statue = new Location(lobby_world, -1.5f, 51.0f, 32.5f, 180, 0);
+		sheep_statue = new Location(lobby_world, -1.5f, 51f, 32.5f, 180, 0);
+		spider_statue = new Location(lobby_world, -4.5f, 51f, 31.5f, 195, -8);
 	}
 	
 }
