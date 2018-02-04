@@ -15,6 +15,7 @@ public class Locations {
 	public static Location zombie_statue;
 	public static Location skeleton_statue;
 	public static Location sheep_statue;
+	public static Location spider_statue;
 	
 	public static void load() {
 		
@@ -26,6 +27,7 @@ public class Locations {
 		zombie_statue = new Location(lobby_world, 5.5f, 51f, 31.5f, 165, 0);
 		skeleton_statue = new Location(lobby_world, 2.5f, 51f, 32.5f, 180, 0);
 		sheep_statue = new Location(lobby_world, -1.5f, 51.0f, 32.5f, 180, 0);
+		spider_statue = new Location(lobby_world, -1.5f, 51.0f, 32.5f, 180, 0);
 	}
 	
 }
