@@ -1,11 +1,11 @@
 package bernhard.scharrer.battlemobs.listeners;
 
-public class ListenerMaster {
+public class Listeners {
 	
 	/**
 	 * register listeners
 	 */
-	public static void register() {
+	public static void init() {
 		new AsyncPlayerChatListener();
 		new BlockBreakListener();
 		new BlockPlaceListener();

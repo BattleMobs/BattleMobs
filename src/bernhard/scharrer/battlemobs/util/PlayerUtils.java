@@ -43,6 +43,12 @@ public class PlayerUtils {
 		
 	}
 	
+	public static void teleportToLobby(Player p) {
+		reset(p);
+		p.sendMessage("§aYou have been teleported to the lobby.");
+		p.teleport(Locations.lobby);
+	}
+	
 	public static void updateEXP(Player p) {
 		PlayerData data = MobMaster.getPlayerData(p);
 		p.setLevel(data.getLevel());

@@ -2,3 +2,8 @@ name: BattleMobs
 author: Bernhard Scharrer
 version: 1.0
 main: bernhard.scharrer.battlemobs.BattleMobs
+
+commands:
+  lobby:
+    description: Teleports you to the lobby.
+    aliases: [l, hub, spawn, s]
