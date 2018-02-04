@@ -131,6 +131,7 @@ public class PigListener extends MobListener {
 
 	@EventHandler
 	public void onRideTry(PlayerInteractDisguisedPlayerEvent event) {
+		// TODO solve this with a tracker (3 block radius) instead of interacting with enemy
 		if (super.valid(event.getPlayer().getWorld())) {
 			
 			event.setCancelled(true);

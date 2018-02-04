@@ -8,7 +8,7 @@ import bernhard.scharrer.battlemobs.util.Item;
 
 public class SheepItems implements MobItems {
 
-	static final String ABILITY_1_NAME = "Bacon Power";
+	static final String ABILITY_1_NAME = "Shearing is Caring";
 	static final String ABILITY_1_DESC = "20%-lifesteal-effect.";
 	static final String ABILITY_2_NAME = "Pig Hook";
 	static final String ABILITY_2_DESC = "Hook all players in a 15 block radius towards you.";
@@ -58,11 +58,11 @@ public class SheepItems implements MobItems {
 		switch(ability) {
 		
 		case 0:
-			return Item.createIngameItem(ABILITY_1_NAME, upgrade<2?Material.PORK:Material.GRILLED_PORK, 0);
+			return Item.createIngameItem(ABILITY_1_NAME, Material.SHEARS, 0);
 		case 1:
-			return Item.createIngameItem(ABILITY_2_NAME, Material.CARROT_STICK, 0);
+			return Item.createIngameItem(ABILITY_2_NAME, Material.GRASS, 0);
 		case 2:
-			return Item.createIngameItem(ABILITY_3_NAME, Material.SADDLE, 0);
+			return Item.createIngameItem(ABILITY_3_NAME, Material.WHEAT, 0);
 	
 		}
 		
