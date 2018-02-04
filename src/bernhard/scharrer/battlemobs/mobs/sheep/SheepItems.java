@@ -8,24 +8,24 @@ import bernhard.scharrer.battlemobs.util.Item;
 
 public class SheepItems implements MobItems {
 
-	static final String ABILITY_1_NAME = "Shearing is Caring";
-	static final String ABILITY_1_DESC = "20%-lifesteal-effect.";
-	static final String ABILITY_2_NAME = "Pig Hook";
-	static final String ABILITY_2_DESC = "Hook all players in a 15 block radius towards you.";
-	static final String ABILITY_3_NAME = "Saddle Down";
-	static final String ABILITY_3_DESC = "Picks up an enemy by RIGHT-clicking him/her.#As long as the enemy stays on you#he/she gets 2 hearts damage/s.";
-	static final String ANILITY_1_TIER_1_NAME = "Not enough?";
-	static final String ANILITY_1_TIER_1_DESC = "Increases lifesteal-effect by 20%.#Total: 40%";
-	static final String ANILITY_2_TIER_1_NAME = "Pain? Why not.";
-	static final String ANILITY_2_TIER_1_DESC = "Every hooked enemy gets 2 hearts damage.";
-	static final String ANILITY_3_TIER_1_NAME = "Blind Rush";
-	static final String ANILITY_3_TIER_1_DESC = "Saddled enemies get a blinding effect.";
-	static final String ANILITY_1_TIER_2_NAME = "Fire makes things better!";
-	static final String ANILITY_1_TIER_2_DESC = "Adds a 3s burn effect to your enemies.";
-	static final String ANILITY_2_TIER_2_NAME = "Power Hook";
-	static final String ANILITY_2_TIER_2_DESC = "Half the cooldown, double the power.";
-	static final String ANILITY_3_TIER_2_NAME = "Burn in hell!";
-	static final String ANILITY_3_TIER_2_DESC = "2 hearts more damage over time#and the target gets a 5s burn effect#when he/she saddles down.";
+	static final String ABILITY_1_NAME = "Shearing Is Caring";
+	static final String ABILITY_1_DESC = "Wool Counter increases 1 wool/hit and 5 wool/kill.#Damage is linked to the Wool Counter.#Max. Wool: 20 ";
+	static final String ABILITY_2_NAME = "Graze";
+	static final String ABILITY_2_DESC = "Click on the floor to change a block to dirt and spawn grass on it.#Grass slows enemies.";
+	static final String ABILITY_3_NAME = "Feeding Time";
+	static final String ABILITY_3_DESC = "Heal.";
+	static final String ANILITY_1_TIER_1_NAME = "Universal Shears";
+	static final String ANILITY_1_TIER_1_DESC = "Other Abilities also get stronger, when the Wool Counter increases.#Ability 2: Increased Slow.#Ability 3: Increased Heal.#Max. Wool: 25 ";
+	static final String ANILITY_2_TIER_1_NAME = "Roses Are Red";
+	static final String ANILITY_2_TIER_1_DESC = "Instead of Grass a rose gets spawned.#It has thorns!";
+	static final String ANILITY_3_TIER_1_NAME = "Bread?";
+	static final String ANILITY_3_TIER_1_DESC = "Just a better heal.";
+	static final String ANILITY_1_TIER_2_NAME = "Wool God";
+	static final String ANILITY_1_TIER_2_DESC = "Right click your Shears when you have max. Wool#to transform into a Wool God!#Max. Wool: 30 ";
+	static final String ANILITY_2_TIER_2_NAME = "Get Away From My Lawn!";
+	static final String ANILITY_2_TIER_2_DESC = "Roses transform to rosebushes and they spray their thorns!";
+	static final String ANILITY_3_TIER_2_NAME = "Cake Heaven";
+	static final String ANILITY_3_TIER_2_DESC = "Adds a Life regneration.";
 
 	@Override
 	public ItemStack getMobInventoryItem(int tier) {
@@ -60,7 +60,7 @@ public class SheepItems implements MobItems {
 		case 0:
 			return Item.createIngameItem(ABILITY_1_NAME, Material.SHEARS, 0);
 		case 1:
-			return Item.createIngameItem(ABILITY_2_NAME, Material.GRASS, 0);
+			return Item.createIngameItem(ABILITY_2_NAME, Material.GRASS_PATH, 0);
 		case 2:
 			return Item.createIngameItem(ABILITY_3_NAME, Material.WHEAT, 0);
 	
