@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 
 import bernhard.scharrer.battlemobs.mobs.MobItems;
 import bernhard.scharrer.battlemobs.util.Item;
+import bernhard.scharrer.battlemobs.util.Tier;
 
 public class ZombieItems implements MobItems {
 
@@ -58,7 +59,7 @@ public class ZombieItems implements MobItems {
 		switch(ability) {
 		
 		case 0:
-			return Item.createIngameItem(ABILITY_1_NAME, upgrade>=4?(upgrade>=7?Material.STONE_SWORD:Material.IRON_SWORD):Material.DIAMOND_SWORD, 0);
+			return Item.createIngameItem(ABILITY_1_NAME, upgrade>=Tier.TIER_2_1?(upgrade>=Tier.TIER_3_1?Material.STONE_SWORD:Material.IRON_SWORD):Material.DIAMOND_SWORD, 0);
 		case 1:
 			return Item.createIngameItem(ABILITY_2_NAME, Material.ROTTEN_FLESH, 0);
 		case 2:

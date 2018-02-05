@@ -35,8 +35,8 @@ public class SheepListener extends MobListener {
 	
 	private static final List<Material> GRAZE_BANNED_BLOCKS = new ArrayList<>();
 	
-	private static final int FEEDING_TIME_HEAL = 2;
-	private static final int FEEDING_TIME_COOLDOWN = 10;
+	private static final int FEEDING_TIME_HEAL = 4;
+	private static final int FEEDING_TIME_COOLDOWN = 15;
 	
 	{
 		GRAZE_BANNED_BLOCKS.add(Material.BARRIER);
@@ -147,7 +147,7 @@ public class SheepListener extends MobListener {
 			
 			int tier = super.getMobTier(p);
 			int heal = getHeal(tier);
-			int cooldown = getHeal_Cooldown(tier);
+			int cooldown = getHealCooldown(tier);
 			
 			if (p.getInventory().getItemInMainHand()!=null) {
 				ItemStack item = p.getInventory().getItemInMainHand();
@@ -175,16 +175,16 @@ public class SheepListener extends MobListener {
 	
 	private int getHeal(int tier) {
 		
-		if (tier >= Tier.TIER_3_3) return FEEDING_TIME_HEAL + 3;
-		else if (tier >= Tier.TIER_3_2) return FEEDING_TIME_HEAL + 2;
+		if (tier >= Tier.TIER_3_3) return FEEDING_TIME_HEAL + 6;
+		else if (tier >= Tier.TIER_3_2) return FEEDING_TIME_HEAL + 4;
 		else return FEEDING_TIME_HEAL;
 		
 	}
 	
-	private int getHeal_Cooldown(int tier) {
+	private int getHealCooldown(int tier) {
 		
-		if (tier >= Tier.TIER_3_3) return FEEDING_TIME_COOLDOWN + 10;
-		else if (tier >= Tier.TIER_3_2) return FEEDING_TIME_COOLDOWN + 5;
+		if (tier >= Tier.TIER_3_3) return FEEDING_TIME_COOLDOWN + 20;
+		else if (tier >= Tier.TIER_3_2) return FEEDING_TIME_COOLDOWN + 10;
 		else return FEEDING_TIME_HEAL;
 		
 	}

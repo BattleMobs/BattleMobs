@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 
 import bernhard.scharrer.battlemobs.mobs.MobItems;
 import bernhard.scharrer.battlemobs.util.Item;
+import bernhard.scharrer.battlemobs.util.Tier;
 
 public class PigItems implements MobItems {
 
@@ -58,7 +59,7 @@ public class PigItems implements MobItems {
 		switch(ability) {
 		
 		case 0:
-			return Item.createIngameItem(ABILITY_1_NAME, upgrade<2?Material.PORK:Material.GRILLED_PORK, 0);
+			return Item.createIngameItem(ABILITY_1_NAME, upgrade<Tier.TIER_1_2 ?Material.PORK:Material.GRILLED_PORK, 0);
 		case 1:
 			return Item.createIngameItem(ABILITY_2_NAME, Material.CARROT_STICK, 0);
 		case 2:

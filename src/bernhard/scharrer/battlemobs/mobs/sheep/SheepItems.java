@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 
 import bernhard.scharrer.battlemobs.mobs.MobItems;
 import bernhard.scharrer.battlemobs.util.Item;
+import bernhard.scharrer.battlemobs.util.Tier;
 
 public class SheepItems implements MobItems {
 
@@ -62,7 +63,7 @@ public class SheepItems implements MobItems {
 		case 1:
 			return Item.createIngameItem(ABILITY_2_NAME, Material.LONG_GRASS, 1);
 		case 2:
-			return Item.createIngameItem(ABILITY_3_NAME, Material.WHEAT, 0);
+			return Item.createIngameItem(ABILITY_3_NAME, upgrade>=Tier.TIER_3_1?(upgrade>=Tier.TIER_3_3?Material.WHEAT:Material.BREAD):Material.CAKE, 0);
 	
 		}
 		
