@@ -17,6 +17,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import bernhard.scharrer.battlemobs.mobs.MobListener;
+import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Task;
 import bernhard.scharrer.battlemobs.util.Tier;
@@ -34,7 +35,8 @@ public class SheepListener extends MobListener {
 	
 	private static final List<Material> GRAZE_BANNED_BLOCKS = new ArrayList<>();
 	
-	private static final double FEEDING_TIME_HEAL = 2;
+	private static final int FEEDING_TIME_HEAL = 2;
+	private static final int FEEDING_TIME_COOLDOWN = 10;
 	
 	{
 		GRAZE_BANNED_BLOCKS.add(Material.BARRIER);
@@ -65,31 +67,31 @@ public class SheepListener extends MobListener {
 	public void onHit(EntityDamageByEntityEvent e) {
 		
 		if (e.getDamager() instanceof Player) {
-			Player sheep = (Player) e.getDamager();
-			if (super.valid(sheep)) {
-				if (sheep.getInventory().getItemInMainHand()!=null) {
+			Player p = (Player) e.getDamager();
+			if (super.valid(p)) {
+				if (p.getInventory().getItemInMainHand()!=null) {
 					
-					ItemStack item = sheep.getInventory().getItemInMainHand();
+					ItemStack item = p.getInventory().getItemInMainHand();
 					if (item.getItemMeta()!=null&&item.getItemMeta().getDisplayName()!=null) {
 						if (item.getItemMeta().getDisplayName().contains(SheepItems.ABILITY_1_NAME)) {
 							
 							e.setCancelled(true);
 							
-							int tier = super.getMobTier(sheep);
+							int tier = super.getMobTier(p);
 							int count = 1;
 							int max = getMaxWool(tier);
 							
-							if (sheep.getInventory().getItem(WOOL_COUNT_SLOT)!=null) {
-								count = sheep.getInventory().getItem(WOOL_COUNT_SLOT).getAmount();
+							if (p.getInventory().getItem(WOOL_COUNT_SLOT)!=null) {
+								count = p.getInventory().getItem(WOOL_COUNT_SLOT).getAmount();
 								count = count + WOOL_COUNT_PER_HIT > max ? max : count + WOOL_COUNT_PER_HIT;
-								sheep.getInventory().getItem(WOOL_COUNT_SLOT).setAmount(count);
+								p.getInventory().getItem(WOOL_COUNT_SLOT).setAmount(count);
 							} else {
-								sheep.getInventory().setItem(WOOL_COUNT_SLOT, WOOL_COUNTER);
+								p.getInventory().setItem(WOOL_COUNT_SLOT, WOOL_COUNTER);
 							}
 							
-							sheep.playSound(sheep.getLocation(), Sound.ENTITY_SHEEP_SHEAR, 1, 1);
+							p.playSound(p.getLocation(), Sound.ENTITY_SHEEP_SHEAR, 1, 1);
 							
-							sheep.updateInventory();
+							p.updateInventory();
 							
 							if (e.getEntity() instanceof LivingEntity) {
 								LivingEntity enemy = (LivingEntity) e.getEntity();
@@ -109,9 +111,9 @@ public class SheepListener extends MobListener {
 	public void onInteract(PlayerInteractEvent e) {
 		
 		if (super.valid(e.getPlayer()) && e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			Player sheep = e.getPlayer();
-			if (sheep.getInventory().getItemInMainHand()!=null) {
-				ItemStack item = sheep.getInventory().getItemInMainHand();
+			Player p = e.getPlayer();
+			if (p.getInventory().getItemInMainHand()!=null) {
+				ItemStack item = p.getInventory().getItemInMainHand();
 				if (item.getItemMeta()!=null&&item.getItemMeta().getDisplayName()!=null) {
 					if (item.getItemMeta().getDisplayName().contains(SheepItems.ABILITY_2_NAME)) {
 						
@@ -121,13 +123,13 @@ public class SheepListener extends MobListener {
 						
 						Material type = block.getType();
 						byte data = block.getData();
-						sheep.getWorld().getBlockAt(block.getLocation()).setType(GRAZE_BLOCK_TYPE);
+						p.getWorld().getBlockAt(block.getLocation()).setType(GRAZE_BLOCK_TYPE);
 						
 						new Task(GRAZE_TIMEOUT) {
 							@Override
 							public void run() {
-								sheep.getWorld().getBlockAt(block.getLocation()).setType(type);
-								sheep.getWorld().getBlockAt(block.getLocation()).setData(data);
+								p.getWorld().getBlockAt(block.getLocation()).setType(type);
+								p.getWorld().getBlockAt(block.getLocation()).setData(data);
 							}
 						};
 						
@@ -141,15 +143,21 @@ public class SheepListener extends MobListener {
 	@EventHandler
 	public void onLeftclick(PlayerInteractEvent e) {
 		if (super.valid(e.getPlayer()) && e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			Player sheep = e.getPlayer();
-			if (sheep.getInventory().getItemInMainHand()!=null) {
-				ItemStack item = sheep.getInventory().getItemInMainHand();
+			Player p = e.getPlayer();
+			
+			int tier = super.getMobTier(p);
+			int heal = getHeal(tier);
+			int cooldown = getHeal_Cooldown(tier);
+			
+			if (p.getInventory().getItemInMainHand()!=null) {
+				ItemStack item = p.getInventory().getItemInMainHand();
 				if (item.getItemMeta()!=null&&item.getItemMeta().getDisplayName()!=null) {
 					if (item.getItemMeta().getDisplayName().contains(SheepItems.ABILITY_3_NAME)) {
-						if (sheep.getHealth()+FEEDING_TIME_HEAL>=sheep.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()) {
-							sheep.setHealth(sheep.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+						new Cooldown(p, 2, cooldown);
+						if (p.getHealth()+heal>=p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()) {
+							p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
 						} else {
-							sheep.setHealth(sheep.getHealth()+FEEDING_TIME_HEAL);
+							p.setHealth(p.getHealth()+heal);
 						}
 					}
 				}
@@ -162,6 +170,22 @@ public class SheepListener extends MobListener {
 		if (tier >= Tier.TIER_1_3) return WOOL_COUNT_MAX_BASE + 10;
 		else if (tier >= Tier.TIER_1_2) return WOOL_COUNT_MAX_BASE + 5;
 		else return WOOL_COUNT_MAX_BASE;
+		
+	}
+	
+	private int getHeal(int tier) {
+		
+		if (tier >= Tier.TIER_3_3) return FEEDING_TIME_HEAL + 3;
+		else if (tier >= Tier.TIER_3_2) return FEEDING_TIME_HEAL + 2;
+		else return FEEDING_TIME_HEAL;
+		
+	}
+	
+	private int getHeal_Cooldown(int tier) {
+		
+		if (tier >= Tier.TIER_3_3) return FEEDING_TIME_COOLDOWN + 10;
+		else if (tier >= Tier.TIER_3_2) return FEEDING_TIME_COOLDOWN + 5;
+		else return FEEDING_TIME_HEAL;
 		
 	}
 	
