@@ -14,19 +14,21 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import bernhard.scharrer.battlemobs.BattleMobs;
 import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Scheduler;
 import bernhard.scharrer.battlemobs.util.Tier;
 import de.robingrether.idisguise.api.DisguiseAPI;
 import de.robingrether.idisguise.disguise.AgeableDisguise;
+import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.MobDisguise;
 
 public class ZombieListener extends MobListener {
 	
-	private static final PotionEffect SWORD_SLOW_1 = new PotionEffect(PotionEffectType.SLOW, 20, 2);
-	private static final PotionEffect SWORD_SLOW_2 = new PotionEffect(PotionEffectType.SLOW, 30, 2);
+	private static final PotionEffect SWORD_SLOW_1 = new PotionEffect(PotionEffectType.SLOW, 30, 2);
+	private static final PotionEffect SWORD_SLOW_2 = new PotionEffect(PotionEffectType.SLOW, 60, 2);
 
 	private static final float BLOODRAGE_SPEED = 1f;
 	private static final int BLOODRAGE_COOLDOWN_TIER1 = 30;
@@ -55,7 +57,7 @@ public class ZombieListener extends MobListener {
 					if (event.getEntity() instanceof LivingEntity) {
 						LivingEntity lentity = (LivingEntity) event.getEntity();
 						lentity.addPotionEffect(tier>=4?SWORD_SLOW_2:SWORD_SLOW_1);
-						p.sendMessage("Zombie schlägt Spieler! " + p.getName());
+						
 					}
 					
 				}
@@ -119,7 +121,19 @@ if(super.valid(event.getPlayer())) {
 						
 						new Cooldown(p, 1, tier >= Tier.TIER_3_2? INNERSTRENGH_COOLDOWN_TIER2:INNERSTRENGH_COOLDOWN_TIER1);
 						
+						BattleMobs.getAPI().disguise(p, DisguiseType.GIANT.newInstance());
 						
+							Scheduler.schedule(INNERSTRENGH_DURATION, ()-> {
+							
+							if (super.valid(p)) {
+								
+								BattleMobs.getAPI().disguise(p, new AgeableDisguise(DisguiseType.ZOMBIE));
+
+								
+							}
+							
+						});
+
 					
 					}
 				}
