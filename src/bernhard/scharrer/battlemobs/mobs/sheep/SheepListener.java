@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.LivingEntity;
@@ -32,6 +33,8 @@ public class SheepListener extends MobListener {
 	private static final float GRAZE_TIMEOUT = 3;
 	
 	private static final List<Material> GRAZE_BANNED_BLOCKS = new ArrayList<>();
+	
+	private static final double FEEDING_TIME_HEAL = 2;
 	
 	{
 		GRAZE_BANNED_BLOCKS.add(Material.BARRIER);
@@ -133,6 +136,25 @@ public class SheepListener extends MobListener {
 			}
 		}
 		
+	}
+	
+	@EventHandler
+	public void onLeftclick(PlayerInteractEvent e) {
+		if (super.valid(e.getPlayer()) && e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			Player sheep = e.getPlayer();
+			if (sheep.getInventory().getItemInMainHand()!=null) {
+				ItemStack item = sheep.getInventory().getItemInMainHand();
+				if (item.getItemMeta()!=null&&item.getItemMeta().getDisplayName()!=null) {
+					if (item.getItemMeta().getDisplayName().contains(SheepItems.ABILITY_3_NAME)) {
+						if (sheep.getHealth()+FEEDING_TIME_HEAL>=sheep.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()) {
+							sheep.setHealth(sheep.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+						} else {
+							sheep.setHealth(sheep.getHealth()+FEEDING_TIME_HEAL);
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	private int getMaxWool(int tier) {
