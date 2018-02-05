@@ -94,8 +94,11 @@ public class PigListener extends MobListener {
 					/*
 					 * pig hook
 					 */
-					if (hand.getItemMeta().getDisplayName().contains(PigItems.ABILITY_2_NAME)) {
-						hook(p, tier);
+					
+					if (hand!=null&&hand.getItemMeta()!=null&&hand.getItemMeta().getDisplayName()!=null) {
+						if (hand.getItemMeta().getDisplayName().contains(PigItems.ABILITY_2_NAME)) {
+							hook(p, tier);
+						}
 					}
 					
 				}

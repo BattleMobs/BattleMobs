@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 
+import bernhard.scharrer.battlemobs.BattleMobs;
 import bernhard.scharrer.battlemobs.data.Database;
 import bernhard.scharrer.battlemobs.data.PlayerData;
 import bernhard.scharrer.battlemobs.mobs.MobMaster;
@@ -33,7 +34,7 @@ public class PlayerUtils {
 		p.setFoodLevel(20);
 		p.closeInventory();
 		changeHealth(p, 20.0);
-		
+		BattleMobs.getAPI().undisguise(p);
 		
 		updateEXP(p);
 		
