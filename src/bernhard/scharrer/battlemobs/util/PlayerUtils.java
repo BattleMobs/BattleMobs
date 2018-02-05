@@ -23,7 +23,6 @@ public class PlayerUtils {
 		p.getInventory().setChestplate(null);
 		p.getInventory().setLeggings(null);
 		p.getInventory().setBoots(null);
-		p.getInventory().setHeldItemSlot(4);
 		p.setExp(0);
 		p.setGameMode(GameMode.SURVIVAL);
 		p.setExhaustion(0);
@@ -42,7 +41,7 @@ public class PlayerUtils {
 	
 	public static void receiveLobbyItems(Player p) {
 		p.getInventory().setItem(1, Item.createItem("§b§lINFO", "", Material.NETHER_STAR, 1, 0));
-		p.getInventory().setItem(4, Item.createItem("§b§lTELEPORTER", "", Material.COMPASS, 1, 0));
+		p.getInventory().setItem(4, Teleporter.TELEPORTER_ITEM);
 		p.getInventory().setItem(7, Item.createItem("§b§lComing soon!", "", Material.NETHER_STAR, 1, 0));
 	}
 	
