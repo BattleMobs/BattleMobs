@@ -21,6 +21,7 @@ import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Task;
 import bernhard.scharrer.battlemobs.util.Tier;
+import de.robingrether.idisguise.disguise.SheepDisguise;
 
 public class SheepListener extends MobListener {
 	
@@ -106,6 +107,22 @@ public class SheepListener extends MobListener {
 		
 	}
 	
+	@EventHandler
+	public void onShearRightClick (PlayerInteractEvent e) {
+		if (super.valid(e.getPlayer()) && e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			Player p = e.getPlayer();
+			if (p.getInventory().getItemInMainHand()!=null) {
+				ItemStack item = p.getInventory().getItemInMainHand();
+				if (item.getItemMeta()!=null&&item.getItemMeta().getDisplayName()!=null) {
+					if (item.getItemMeta().getDisplayName().contains(SheepItems.ABILITY_1_NAME)) {
+						
+					}
+				}
+			}
+
+		}
+	}
+	
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
@@ -141,7 +158,8 @@ public class SheepListener extends MobListener {
 	}
 	
 	@EventHandler
-	public void onLeftclick(PlayerInteractEvent e) {
+	public void onRightClick(PlayerInteractEvent e) {
+		
 		if (super.valid(e.getPlayer()) && e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Player p = e.getPlayer();
 			
