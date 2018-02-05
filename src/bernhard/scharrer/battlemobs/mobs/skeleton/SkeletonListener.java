@@ -89,7 +89,7 @@ public class SkeletonListener extends MobListener {
 				
 				Player p = (Player) event.getEntity();
 				
-				if (event.getDamager().getCustomName().startsWith(ARROW_TAG_HEADER)) {
+				if (event.getDamager().getCustomName()!=null && event.getDamager().getCustomName().startsWith(ARROW_TAG_HEADER)) {
 					
 					event.setCancelled(true);
 					

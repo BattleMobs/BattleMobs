@@ -38,6 +38,7 @@ public class PigListener extends MobListener {
 	private static final double SADDLE_DAMAGE = 1;
 	private static final double SADDLE_BONUS = 1;
 	private static final int SADDLE_FIRE = 5;
+	private static final double SADDLE_DOWN_RADIUS = 4;
 
 	@EventHandler (priority=EventPriority.HIGHEST)
 	public void onDamage(EntityDamageByEntityEvent event) {
@@ -71,7 +72,7 @@ public class PigListener extends MobListener {
 						event.getEntity().setFireTicks(20*PORK_BURN_SECONDS);	
 					}
 					
-				}
+				} else event.setCancelled(true);
 				
 			}
 			
@@ -91,13 +92,52 @@ public class PigListener extends MobListener {
 			if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 				if (tier != -1 && hand!=null && hand.getItemMeta()!=null) {
 					
-					/*
-					 * pig hook
-					 */
-					
 					if (hand!=null&&hand.getItemMeta()!=null&&hand.getItemMeta().getDisplayName()!=null) {
+						/*
+						 * pig hook
+						 */
 						if (hand.getItemMeta().getDisplayName().contains(PigItems.ABILITY_2_NAME)) {
 							hook(p, tier);
+						}
+						
+						/*
+						 * saddle down
+						 */
+						if (hand.getItemMeta().getDisplayName().contains(PigItems.ABILITY_3_NAME)) {
+							
+							Player tracked = null;
+							
+							for (Entity e : p.getNearbyEntities(SADDLE_DOWN_RADIUS, SADDLE_DOWN_RADIUS, SADDLE_DOWN_RADIUS)) {
+								if (e instanceof Player) {
+									tracked = (Player) e;
+									break;
+								}
+							}
+							
+							if (tracked!=null) {
+								if (super.valid(event.getPlayer().getWorld())) {
+									
+									event.setCancelled(true);
+									
+									if (hand!=null&&hand.getItemMeta()!=null&&hand.getItemMeta().getDisplayName().contains(PigItems.ABILITY_3_NAME)) {
+										
+										p.addPassenger(tracked);
+										new RidingEffect(this, tier, p, tracked);
+										new Cooldown(p, 2, 30);
+										
+									}
+									
+									if (hand!=null&&hand.getItemMeta()!=null&&hand.getItemMeta().getDisplayName().contains(PigItems.ABILITY_2_NAME)) {
+										hook(p, tier);
+									}
+									
+								}
+							} else {
+								
+								p.playSound(p.getLocation(), Sound.BLOCK_NOTE_SNARE, 1, 1);
+								
+							}
+
 						}
 					}
 					
@@ -134,28 +174,8 @@ public class PigListener extends MobListener {
 
 	@EventHandler
 	public void onRideTry(PlayerInteractDisguisedPlayerEvent event) {
-		// TODO solve this with a tracker (3 block radius) instead of interacting with enemy
-		if (super.valid(event.getPlayer().getWorld())) {
-			
-			event.setCancelled(true);
-			Player p = event.getPlayer();
-			int tier = super.getMobTier(p);
-			ItemStack hand = p.getInventory().getItemInMainHand();
-			
-			if (hand!=null&&hand.getItemMeta()!=null&&hand.getItemMeta().getDisplayName().contains(PigItems.ABILITY_3_NAME)) {
-				
-				p.addPassenger(event.getRightClicked());
-				new RidingEffect(this, tier, p, event.getRightClicked());
-				new Cooldown(p, 2, 30);
-				
-			}
-			
-			if (hand!=null&&hand.getItemMeta()!=null&&hand.getItemMeta().getDisplayName().contains(PigItems.ABILITY_2_NAME)) {
-				hook(p, tier);
-			}
-			
-		}
 	}
+	
 	@EventHandler
 	public void onExit(EntityDismountEvent event) {
 		if (super.valid(event.getDismounted())) {

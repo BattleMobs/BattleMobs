@@ -47,4 +47,8 @@ public class Item {
 		return item;
 	}
 	
+	public static boolean valid(ItemStack item) {
+		return (item != null && item.getItemMeta() != null && item.getItemMeta().getDisplayName() != null);
+	}
+	
 }

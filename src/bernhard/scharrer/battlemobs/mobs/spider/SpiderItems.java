@@ -17,11 +17,11 @@ public class SpiderItems implements MobItems {
     static final String ABILITY_1_TIER_1_NAME = "More arrows, more hits!";
     static final String ABILITY_1_TIER_1_DESC = "Shoot 3 times instead of only one time.";
     static final String ABILITY_2_TIER_1_NAME = "Web Cluster";
-    static final String ABILITY_2_TIER_1_DESC = "Doubles decay time of web ball.#Deals 3 hearts damage to#everyone in the ball.";
+    static final String ABILITY_2_TIER_1_DESC = "Doubles decay time of web ball.#Deals 3 hearts damage to#everyone who is inside the ball.";
     static final String ABILITY_3_TIER_1_NAME = "Run my friends, run!";
     static final String ABILITY_3_TIER_1_DESC = "Increases speed of cave spiders.#(2,5x as fast as before)";
     static final String ABILITY_1_TIER_2_NAME = "Not even close.";
-    static final String ABILITY_1_TIER_2_DESC = "Adds a super annoying knockback effect when you hit your enemy during combat.";
+    static final String ABILITY_1_TIER_2_DESC = "Adds a super annoying knockback#effect when you hit your#enemy during combat.";
     static final String ABILITY_2_TIER_2_NAME = "Attention please!";
     static final String ABILITY_2_TIER_2_DESC = "Poisons your enemies for 5s#when they get caught into the ball.";
     static final String ABILITY_3_TIER_2_NAME = "Efficent Reproduction";
