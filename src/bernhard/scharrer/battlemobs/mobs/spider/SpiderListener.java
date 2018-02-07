@@ -29,7 +29,7 @@ public class SpiderListener extends MobListener {
 	private static final double EYE_OF_SPIDER_ARROW_AMOUNT = 3;
 	private static final String ARROW_TAG_HEADER = "񗉷;";
 	private static final int WEB_BOMB_EXPLODE_TIME = 4;
-	private static final float WEB_BOMB__SPEED = 1.2f;
+	private static final float WEB_BOMB_SPEED = 1.2f;
 	private static final ItemStack WEB_BOMB_ITEM = Item.createIngameItem("", Material.STRING, 0);
 
 	@EventHandler
@@ -138,7 +138,7 @@ public class SpiderListener extends MobListener {
 		
 		public WebBomb(Player p) {
 			org.bukkit.entity.Item item = p.getWorld().dropItem(p.getEyeLocation(), WEB_BOMB_ITEM);
-			item.setVelocity(p.getEyeLocation().getDirection().normalize().multiply(WEB_BOMB__SPEED));
+			item.setVelocity(p.getEyeLocation().getDirection().normalize().multiply(WEB_BOMB_SPEED));
 			item.setCustomNameVisible(false);
 			
 			new Task(0,0.2f) {
@@ -152,7 +152,7 @@ public class SpiderListener extends MobListener {
 						p.getWorld().playEffect(item.getLocation(), Effect.EXPLOSION_HUGE, 1);
 						cancel();
 					} else {
-//						p.getWorld().playEffect(item.getLocation(), Effect.FLAME, 1);
+						// TODO
 					}
 					
 					time++;

@@ -15,6 +15,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import bernhard.scharrer.battlemobs.BattleMobs;
 import bernhard.scharrer.battlemobs.mobs.MobListener;
@@ -35,6 +37,7 @@ public class SheepListener extends MobListener {
 	private static final ItemStack WOOL_COUNTER = Item.createIngameItem("WOOL COUNTER", Material.WOOL, 0);
 	private static final Material GRAZE_BLOCK_TYPE = Material.GRASS;
 	private static final float GRAZE_TIMEOUT = 3;
+	private static final PotionEffect JUMP_BOOST = new PotionEffect(PotionEffectType.JUMP, 60, 3);
 	
 	private static final List<Material> GRAZE_BANNED_BLOCKS = new ArrayList<>();
 	
@@ -146,9 +149,11 @@ public class SheepListener extends MobListener {
 														SheepDisguise sheep = (SheepDisguise) d;
 														sheep.setColor(color);
 														BattleMobs.getAPI().disguise(p, sheep);
+														p.addPotionEffect(JUMP_BOOST);
 														
 													}
 												} else {
+													p.removePotionEffect(PotionEffectType.JUMP);
 													god_sheeps.remove(p);
 													cancel();
 												}
