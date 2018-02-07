@@ -17,6 +17,10 @@ public class Cooldown {
 	private int task;
 	private int cooldown;
 	private Cooldown instance;
+	private Player player;
+	
+	private Task period_task;
+	private Task end_task;
 	
 	private static List<Cooldown> cooldowns = new Vector<>();
 	
@@ -24,6 +28,7 @@ public class Cooldown {
 		
 		p.playSound(p.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 10, 10);
 		
+		this.player = p;
 		this.cooldown = cooldown;
 		this.item = p.getInventory().getItem(slot);
 		this.instance = this;
@@ -31,36 +36,64 @@ public class Cooldown {
 		p.getInventory().setItem(slot, Item.createItem("§3", "", MATERIAL_COOLDOWN, this.cooldown, 0));
 		p.updateInventory();
 		
-		task = Scheduler.schedule(20, 20, ()->{
-			
-			this.cooldown--;
-			
-			if (cooldown > 0 && isPlayerValid(p)) {
+		period_task = new Task(1, 1) {
+
+			public void run() {
 				
-				if (p.getInventory().getItem(slot)!=null && p.getInventory().getItem(slot).getType()==MATERIAL_COOLDOWN) {
+				Cooldown.this.cooldown--;
+				
+				if (cooldown > 0 && isPlayerValid(p)) {
 					
-					p.getInventory().getItem(slot).setAmount(this.cooldown);
-					
+					if (p.getInventory().getItem(slot)!=null && p.getInventory().getItem(slot).getType()==MATERIAL_COOLDOWN) {
+						
+						p.getInventory().getItem(slot).setAmount(Cooldown.this.cooldown);
+						
+					}
+				} else {
+					cooldowns.remove(instance);
+					Scheduler.cancel(task);
 				}
-			} else {
-				cooldowns.remove(instance);
-				Scheduler.cancel(task);
+				
 			}
-			
-		});
+
+		};
+		
+		end_task = new Task(cooldown) {
+
+			public void run() {
+				if (isPlayerValid(p)) {
+					p.getInventory().setItem(slot, item);
+					p.updateInventory();
+					p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
+				}
+				cooldowns.remove(instance);
+				period_task.cancel();
+			}
+		};
 		
 		Scheduler.schedule(cooldown*20, ()->{
-			if (isPlayerValid(p)) {
-				p.getInventory().setItem(slot, item);
-				p.updateInventory();
-				p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
-			}
-			cooldowns.remove(instance);
-			Scheduler.cancel(task);
+
 		});
 		
 		cooldowns.add(this);
 		
+	}
+	
+	public static void clearCooldowns(Player p) {
+		for (Cooldown cooldown : cooldowns) {
+			if (cooldown.getPlayer()==p) {
+				cooldown.cancel();
+			}
+		}
+	}
+	
+	private void cancel() {
+		period_task.cancel();
+		end_task.cancel();
+	}
+
+	public Player getPlayer() {
+		return player;
 	}
 	
 	private boolean isPlayerValid(Player p) {

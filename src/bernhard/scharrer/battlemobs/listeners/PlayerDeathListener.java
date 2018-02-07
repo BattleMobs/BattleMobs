@@ -21,6 +21,7 @@ import bernhard.scharrer.battlemobs.data.MobData;
 import bernhard.scharrer.battlemobs.data.PlayerData;
 import bernhard.scharrer.battlemobs.mobs.BattleMob;
 import bernhard.scharrer.battlemobs.mobs.MobMaster;
+import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Locations;
 import bernhard.scharrer.battlemobs.util.MapHandler;
 import bernhard.scharrer.battlemobs.util.PlayerUtils;
@@ -96,7 +97,7 @@ public class PlayerDeathListener extends Listener {
 			Bukkit.broadcastMessage("§c" + p.getName() + " §7died.");
 		}
 		
-		
+		Cooldown.clearCooldowns(p);
 		p.setGameMode(GameMode.SPECTATOR);
 		p.setVelocity(new Vector(0, 2, 0));
 		p.playSound(p.getLocation(), Sound.ENTITY_IRONGOLEM_DEATH, 1, 1);

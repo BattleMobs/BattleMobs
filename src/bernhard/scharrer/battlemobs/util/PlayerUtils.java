@@ -35,6 +35,7 @@ public class PlayerUtils {
 		p.closeInventory();
 		changeHealth(p, 20.0);
 		BattleMobs.getAPI().undisguise(p);
+		Cooldown.clearCooldowns(p);
 		
 		updateEXP(p);
 		
