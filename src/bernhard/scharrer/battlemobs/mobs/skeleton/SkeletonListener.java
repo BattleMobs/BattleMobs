@@ -2,7 +2,6 @@ package bernhard.scharrer.battlemobs.mobs.skeleton;
 
 import java.util.Random;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -94,16 +93,8 @@ public class SkeletonListener extends MobListener {
 					event.setCancelled(true);
 					
 					String[] data = event.getDamager().getCustomName().split(";");
-					Player shooter = null;
-					for (Player online : Bukkit.getOnlinePlayers()) {
-						if (online.getName().equals(data[1])) {
-							shooter = online;
-							break;
-						}
-					}
 					
-					if (shooter != null && shooter != p) p.damage(Double.parseDouble(data[2]));
-					else p.damage(Double.parseDouble(data[2]));
+					p.damage(Double.parseDouble(data[2]));
 					
 					if (Boolean.parseBoolean(data[3]) && !Boolean.parseBoolean(data[5])) {
 						p.addPotionEffect(FLASH);

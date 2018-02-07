@@ -9,7 +9,7 @@ import bernhard.scharrer.battlemobs.util.Item;
 public class SpiderItems implements MobItems {
 	
 	static final String ABILITY_1_NAME = "Eye Of The Spider";
-    static final String ABILITY_1_DESC = "Left click to poison your enemy by 3s.#Deals 2 hearts damage.##Right click to shoot a toxic arrow.#Arrow deals 5 hearts damage.";
+    static final String ABILITY_1_DESC = "Left click to poison your enemy by 3s.#Deals 3 hearts damage.##Right click to shoot a toxic arrow.#Arrow deals 2 hearts damage#and posions your enemy#for 3s.";
     static final String ABILITY_2_NAME = "Web Bomb";
     static final String ABILITY_2_DESC = "Throws a web bomb. After 2s#a web ball gets summoned.#If you hit a enemy with it,#the ball summons immidiately.#Don't get into your own ball!";
     static final String ABILITY_3_NAME = "Spider Army";

@@ -1,20 +1,31 @@
 package bernhard.scharrer.battlemobs.mobs.spider;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Item;
+import bernhard.scharrer.battlemobs.util.Task;
 import bernhard.scharrer.battlemobs.util.Tier;
 
 public class SpiderListener extends MobListener {
 	
 	private static final float EYE_OF_SPIDER_SPEED = 2.5f;
+	private static final PotionEffect POISON_3S = new PotionEffect(PotionEffectType.POISON, 60, 0);
+	private static final double EYE_OF_SPIDER_DAMAGE = 6;
+	private static final double EYE_OF_SPIDER_ARROW_DAMAGE = 4;
+	private static final double EYE_OF_SPIDER_ARROW_AMOUNT = 3;
+	private static final String ARROW_TAG_HEADER = "񗉷;";
+	private static final int WEB_BOMB_EXPLODE_TIME = 4;
 
 	@EventHandler
 	public void onHit(EntityDamageByEntityEvent event) {
@@ -22,14 +33,19 @@ public class SpiderListener extends MobListener {
 			Player p = (Player) event.getDamager();
 			int tier = super.getMobTier(p);
 			if (super.valid(p) && tier != Tier.UNDEFINED) {
-				
 				if (Item.valid(p.getInventory().getItemInMainHand())) {
-					
 					/*
 					 * eye of the spider melee
 					 */
 					if (p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains(SpiderItems.ABILITY_1_NAME)) {
-						
+						if (event.getEntity() instanceof LivingEntity) {
+							p.playSound(p.getLocation(), Sound.ENTITY_SPIDER_AMBIENT, 1, 1);
+							event.setCancelled(true);
+							LivingEntity lentity = (LivingEntity) event.getEntity();
+							lentity.addPotionEffect(POISON_3S);
+							lentity.damage(EYE_OF_SPIDER_DAMAGE);
+							
+						}
 					}
 					
 					event.setCancelled(true);
@@ -38,6 +54,23 @@ public class SpiderListener extends MobListener {
 				
 			}
 		}
+		
+		if (event.getDamager() instanceof Arrow) {
+			if (event.getEntity() instanceof LivingEntity) {
+				
+				LivingEntity p = (LivingEntity) event.getEntity();
+				event.setCancelled(true);
+				
+				/*
+				 * eye of the spider ranged
+				 */
+				if (event.getDamager().getCustomName()!=null && event.getDamager().getCustomName().startsWith(ARROW_TAG_HEADER)) {
+					p.addPotionEffect(POISON_3S);
+					p.damage(EYE_OF_SPIDER_ARROW_DAMAGE);
+				}
+			}
+		}
+		
 	}
 	
 	@EventHandler
@@ -54,17 +87,70 @@ public class SpiderListener extends MobListener {
 					 */
 					if (p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains(SpiderItems.ABILITY_1_NAME)) {
 						
-						Arrow arrow = p.getWorld().spawn(p.getEyeLocation().add(0,0.1,0), Arrow.class);
-						arrow.setVelocity(p.getEyeLocation().getDirection().normalize().multiply(EYE_OF_SPIDER_SPEED));
-						arrow.setShooter(p);
+						if (tier>=Tier.TIER_1_2) {
+							new Task(0,0.3f) {
+								private int amount = 0;
+								@Override
+								public void run() {
+									shotArrow(p);
+									if (++amount >= EYE_OF_SPIDER_ARROW_AMOUNT) {
+										cancel();
+									}
+								}
+							};
+						} else {
+							shotArrow(p);
+						}
 						
 						new Cooldown(p, 0, 10);
+					}
+					
+					/*
+					 * web bomb
+					 */
+					if (p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains(SpiderItems.ABILITY_2_NAME)) {
+						
+						new WebBomb(p);
+						
 					}
 					
 				}
 			}
 			
 		}
+	}
+
+	private void shotArrow(Player p) {
+		p.playSound(p.getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, 1);
+		Arrow arrow = p.getWorld().spawn(p.getEyeLocation().add(0,0.1,0), Arrow.class);
+		arrow.setVelocity(p.getEyeLocation().getDirection().normalize().multiply(EYE_OF_SPIDER_SPEED));
+		arrow.setCustomNameVisible(false);
+		arrow.setCustomName(ARROW_TAG_HEADER);
+		arrow.setShooter(p);
+	}
+	
+	private class WebBomb {
+		
+		public WebBomb(Player p) {
+			org.bukkit.entity.Item item = null;//p.getWorld().dropItem(p.getLocation(), WEB_BOMB_ITEM);
+			item.setVelocity(p.getEyeLocation().getDirection().normalize().multiply(EYE_OF_SPIDER_SPEED));
+			item.setCustomNameVisible(false);
+			
+			new Task(0,10) {
+				private int time = 0;
+				@Override
+				public void run() {
+					if (time >= WEB_BOMB_EXPLODE_TIME) {
+						item.remove();
+						p.playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
+						cancel();
+					}
+					
+					time++;
+				}
+			};
+		}
+		
 	}
 	
 }
