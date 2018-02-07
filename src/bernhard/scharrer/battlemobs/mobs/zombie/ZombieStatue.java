@@ -14,7 +14,9 @@ public class ZombieStatue extends MobStatue {
 
 	@Override
 	protected EntityInsentient generateEntity(WorldServer world) {
-		return new EntityZombie(world);
+		EntityZombie mob = new EntityZombie(world);
+		mob.setBaby(false );		
+		return mob;
 	}
 
 }
