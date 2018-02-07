@@ -31,6 +31,7 @@ public class SpiderListener extends MobListener {
 	private static final int WEB_BOMB_EXPLODE_TIME = 4;
 	private static final float WEB_BOMB_SPEED = 1.2f;
 	private static final ItemStack WEB_BOMB_ITEM = Item.createIngameItem("", Material.STRING, 0);
+	private static final double EYE_OF_SPIDER_KNOCKBACK = 1.2;
 
 	@EventHandler
 	public void onHit(EntityDamageByEntityEvent event) {
@@ -49,7 +50,9 @@ public class SpiderListener extends MobListener {
 							LivingEntity lentity = (LivingEntity) event.getEntity();
 							lentity.addPotionEffect(POISON_3S);
 							lentity.damage(EYE_OF_SPIDER_DAMAGE);
-							
+							if (tier >= Tier.TIER_1_3) {
+								lentity.setVelocity(lentity.getEyeLocation().toVector().subtract(p.getLocation().toVector()).normalize().multiply(EYE_OF_SPIDER_KNOCKBACK));
+							}
 						}
 					}
 					
