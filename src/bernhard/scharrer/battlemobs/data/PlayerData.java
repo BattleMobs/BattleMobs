@@ -78,13 +78,17 @@ public class PlayerData {
 
 	public void modifyMoney(int money) {
 		this.money += money;
-		Database.execute("UPDATE PLAYERS SET MONEY = '"+this.money+"' WHERE UUID LIKE '"+p.getUniqueId().toString()+"'");
+		new Thread(()-> {
+			Database.execute("UPDATE PLAYERS SET MONEY = '"+this.money+"' WHERE UUID LIKE '"+p.getUniqueId().toString()+"'");
+		}).start();
 	}
 	
 	public void addEXP(int exp) {
 		int level = getLevel();
 		this.exp += exp;
-		Database.execute("UPDATE PLAYERS SET EXP = '"+this.exp+"' WHERE UUID LIKE '"+p.getUniqueId().toString()+"'");
+		new Thread(()-> {
+			Database.execute("UPDATE PLAYERS SET EXP = '"+this.exp+"' WHERE UUID LIKE '"+p.getUniqueId().toString()+"'");
+		}).start();
 		// level up
 		if (getLevel()>level) {
 			
@@ -98,12 +102,16 @@ public class PlayerData {
 	
 	public void incrementKills() {
 		this.kills++;
-		Database.execute("UPDATE PLAYERS SET KILLS = '"+this.kills+"' WHERE UUID LIKE '"+p.getUniqueId().toString()+"'");
+		new Thread(()-> {
+			Database.execute("UPDATE PLAYERS SET KILLS = '"+this.kills+"' WHERE UUID LIKE '"+p.getUniqueId().toString()+"'");
+		}).start();
 	}
 	
 	public void incrementDeaths() {
 		this.deaths++;
-		Database.execute("UPDATE PLAYERS SET DEATHS = '"+this.deaths+"' WHERE UUID LIKE '"+p.getUniqueId().toString()+"'");
+		new Thread(()-> {
+			Database.execute("UPDATE PLAYERS SET DEATHS = '"+this.deaths+"' WHERE UUID LIKE '"+p.getUniqueId().toString()+"'");
+		}).start();
 	}
 
 }

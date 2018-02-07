@@ -102,7 +102,7 @@ public class SkeletonListener extends MobListener {
 						}
 					}
 					
-					if (shooter != null) p.damage(Double.parseDouble(data[2]), shooter);
+					if (shooter != null && shooter != p) p.damage(Double.parseDouble(data[2]));
 					else p.damage(Double.parseDouble(data[2]));
 					
 					if (Boolean.parseBoolean(data[3]) && !Boolean.parseBoolean(data[5])) {
@@ -117,6 +117,14 @@ public class SkeletonListener extends MobListener {
 						p.addPotionEffect(RIDE_OF_DEATH_BLIND);
 					}
 					
+				}
+				
+			}
+			
+			if (event.getEntity() instanceof SkeletonHorse) {
+				
+				if (event.getDamager().getCustomName()!=null && event.getDamager().getCustomName().startsWith(ARROW_TAG_HEADER)) {
+					event.setCancelled(true);
 				}
 				
 			}

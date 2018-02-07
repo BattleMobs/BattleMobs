@@ -89,7 +89,6 @@ public class PlayerDeathListener extends Listener {
 			k_data.addEXP(5);
 			k_mob.addEXP(10);
 			
-			PlayerUtils.updateEXP(p);
 			PlayerUtils.updateEXP(k);
 			Scoreboard.updateScoreboard(k);
 			Bukkit.broadcastMessage("§a" + k.getName() + "§7 killed §c" + p.getName()+"§7.");
@@ -103,6 +102,8 @@ public class PlayerDeathListener extends Listener {
 		p.playSound(p.getLocation(), Sound.ENTITY_IRONGOLEM_DEATH, 1, 1);
 		p.getWorld().playEffect(p.getLocation(), Effect.ENDER_SIGNAL, 100);
 		p.addPotionEffect(FLASH);
+		PlayerUtils.updateEXP(p);
+
 		
 		int action = Scheduler.schedule(40,20, new Runnable() {
 			
@@ -130,7 +131,6 @@ public class PlayerDeathListener extends Listener {
 				PlayerUtils.reset(p);
 				p_data.setCurrent(mob.getType());
 				MapHandler.teleportIntoMap(p, p_mob.getTier(), mob);
-				
 			}
 			Scheduler.cancel(action);
 			

@@ -55,7 +55,9 @@ public class MobData {
 	public void addEXP(int exp) {
 		int level = getLevel();
 		this.exp += exp;
-		Database.execute("UPDATE MOBS SET EXP="+this.exp+" WHERE MOB LIKE '"+type.toString()+"' AND UUID LIKE '"+p.getUniqueId().toString()+"'");
+		new Thread(()-> {
+			Database.execute("UPDATE MOBS SET EXP="+this.exp+" WHERE MOB LIKE '"+type.toString()+"' AND UUID LIKE '"+p.getUniqueId().toString()+"'");
+		}).start();
 		// level up
 		if (getLevel()>level) {
 			
@@ -67,17 +69,23 @@ public class MobData {
 	
 	public void incrementKills() {
 		this.kills++;
-		Database.execute("UPDATE MOBS SET KILLS="+this.kills+" WHERE MOB LIKE '"+type.toString()+"' AND UUID LIKE '"+p.getUniqueId().toString()+"'");
+		new Thread(()-> {
+			Database.execute("UPDATE MOBS SET KILLS="+this.kills+" WHERE MOB LIKE '"+type.toString()+"' AND UUID LIKE '"+p.getUniqueId().toString()+"'");			
+		}).start();
 	}
 	
 	public void incrementDeaths() {
 		this.deaths++;
-		Database.execute("UPDATE MOBS SET DEATHS="+this.deaths+" WHERE MOB LIKE '"+type.toString()+"' AND UUID LIKE '"+p.getUniqueId().toString()+"'");
+		new Thread(()-> {
+			Database.execute("UPDATE MOBS SET DEATHS="+this.deaths+" WHERE MOB LIKE '"+type.toString()+"' AND UUID LIKE '"+p.getUniqueId().toString()+"'");
+		}).start();
 	}
 	
 	public void incrementTier() {
 		this.tier++;
-		Database.execute("UPDATE MOBS SET TIER="+this.tier+" WHERE MOB LIKE '"+type.toString()+"' AND UUID LIKE '"+p.getUniqueId().toString()+"'");
+		new Thread(()-> {
+			Database.execute("UPDATE MOBS SET TIER="+this.tier+" WHERE MOB LIKE '"+type.toString()+"' AND UUID LIKE '"+p.getUniqueId().toString()+"'");
+		}).start();
 	}
 	
 }
