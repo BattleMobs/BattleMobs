@@ -13,6 +13,7 @@ public class Listeners {
 		new FoodLevelChangeListener();
 		new InventoryClickListener();
 		new LeavesDecayListener();
+		new PlayerPickUpListener();
 		new PlayerDeathListener();
 		new PlayerDropItemListener();
 //		new PlayerInteractEntityListener());

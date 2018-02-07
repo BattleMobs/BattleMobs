@@ -3,11 +3,11 @@ package bernhard.scharrer.battlemobs.mobs.sheep;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,11 +16,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import bernhard.scharrer.battlemobs.BattleMobs;
 import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Task;
 import bernhard.scharrer.battlemobs.util.Tier;
+import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.SheepDisguise;
 
 public class SheepListener extends MobListener {
@@ -28,7 +30,7 @@ public class SheepListener extends MobListener {
 	private static final int WOOL_COUNT_SLOT = 3;
 	private static final int WOOL_COUNT_PER_HIT = 1;
 	private static final int WOOL_COUNT_PER_KILL = 5;
-	private static final int WOOL_COUNT_MAX_BASE = 20;
+	private static final int WOOL_COUNT_MAX_BASE = 5;
 	private static final double WOOL_COUNT_DAMAGE_MODIFIER = 0.25;
 	private static final ItemStack WOOL_COUNTER = Item.createIngameItem("WOOL COUNTER", Material.WOOL, 0);
 	private static final Material GRAZE_BLOCK_TYPE = Material.GRASS;
@@ -38,6 +40,8 @@ public class SheepListener extends MobListener {
 	
 	private static final int FEEDING_TIME_HEAL = 4;
 	private static final int FEEDING_TIME_COOLDOWN = 15;
+	
+	private static List<Player> god_sheeps = new ArrayList<>();
 	
 	{
 		GRAZE_BANNED_BLOCKS.add(Material.BARRIER);
@@ -117,15 +121,45 @@ public class SheepListener extends MobListener {
 					if (item.getItemMeta().getDisplayName().contains(SheepItems.ABILITY_1_NAME)) {
 						
 						int tier = super.getMobTier(p);
-						int count = 1;
-						int max = getMaxWool(tier);
-						count = p.getInventory().getItem(WOOL_COUNT_SLOT).getAmount();
-						if (tier >= Tier.TIER_3_1) {
-							if (count == max) {
-								
-								
-							}	
+						ItemStack wool = p.getInventory().getItem(WOOL_COUNT_SLOT);
+						if (wool !=null) {
+							int count = wool.getAmount();
+							if (tier >= Tier.TIER_1_3) {
+								if (count == getMaxWool(tier)) {
+									if (!god_sheeps.contains(p)) {
+										
+										god_sheeps.add(p);
+										
+										new Task(0,1) {
+											private int n;
+											@SuppressWarnings("deprecation")
+											public void run() {
+												if (SheepListener.this.valid(p)) {
+													n++;
+													n = n % DyeColor.values().length;
+													DyeColor color = DyeColor.values()[n];
+													
+													Disguise d = BattleMobs.getAPI().getDisguise(p);
+													
+													if (d instanceof SheepDisguise) {
+														
+														SheepDisguise sheep = (SheepDisguise) d;
+														sheep.setColor(color);
+														BattleMobs.getAPI().disguise(p, sheep);
+														
+													}
+												} else {
+													god_sheeps.remove(p);
+													cancel();
+												}
+											}
+										};
+										
+									}
+								}	
+							}
 						}
+						
 					}
 				}
 			}

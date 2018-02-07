@@ -1,5 +1,7 @@
 package bernhard.scharrer.battlemobs.mobs.spider;
 
+import org.bukkit.Effect;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
@@ -8,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -26,6 +29,8 @@ public class SpiderListener extends MobListener {
 	private static final double EYE_OF_SPIDER_ARROW_AMOUNT = 3;
 	private static final String ARROW_TAG_HEADER = "񗉷;";
 	private static final int WEB_BOMB_EXPLODE_TIME = 4;
+	private static final float WEB_BOMB__SPEED = 1.2f;
+	private static final ItemStack WEB_BOMB_ITEM = Item.createIngameItem("", Material.STRING, 0);
 
 	@EventHandler
 	public void onHit(EntityDamageByEntityEvent event) {
@@ -132,18 +137,22 @@ public class SpiderListener extends MobListener {
 	private class WebBomb {
 		
 		public WebBomb(Player p) {
-			org.bukkit.entity.Item item = null;//p.getWorld().dropItem(p.getLocation(), WEB_BOMB_ITEM);
-			item.setVelocity(p.getEyeLocation().getDirection().normalize().multiply(EYE_OF_SPIDER_SPEED));
+			org.bukkit.entity.Item item = p.getWorld().dropItem(p.getEyeLocation(), WEB_BOMB_ITEM);
+			item.setVelocity(p.getEyeLocation().getDirection().normalize().multiply(WEB_BOMB__SPEED));
 			item.setCustomNameVisible(false);
 			
-			new Task(0,10) {
+			new Task(0,0.2f) {
 				private int time = 0;
+				@SuppressWarnings("deprecation")
 				@Override
 				public void run() {
 					if (time >= WEB_BOMB_EXPLODE_TIME) {
 						item.remove();
-						p.playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
+						p.getWorld().playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
+						p.getWorld().playEffect(item.getLocation(), Effect.EXPLOSION_HUGE, 1);
 						cancel();
+					} else {
+//						p.getWorld().playEffect(item.getLocation(), Effect.FLAME, 1);
 					}
 					
 					time++;
