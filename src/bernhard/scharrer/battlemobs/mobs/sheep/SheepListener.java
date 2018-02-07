@@ -40,7 +40,6 @@ public class SheepListener extends MobListener {
 	private static final PotionEffect JUMP_BOOST = new PotionEffect(PotionEffectType.JUMP, 60, 3);
 
 	private static final List<Material> GRAZE_BANNED_BLOCKS = new ArrayList<>();
-
 	private static final int FEEDING_TIME_HEAL = 4;
 	private static final int FEEDING_TIME_REGENERATION = 4;
 	private static final int FEEDING_TIME_COOLDOWN = 15;
@@ -212,41 +211,44 @@ public class SheepListener extends MobListener {
 
 	@EventHandler
 	public void onRightClick(PlayerInteractEvent e) {
-		
-		if (super.valid(e.getPlayer()) && e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+
+		if (super.valid(e.getPlayer()) && e.getAction() == Action.RIGHT_CLICK_AIR
+				|| e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Player p = e.getPlayer();
-			
+
 			int tier = super.getMobTier(p);
 			int heal = getHeal(tier);
 			int cooldown = getHealCooldown(tier);
-			
-			if (p.getInventory().getItemInMainHand()!=null) {
+
+			if (p.getInventory().getItemInMainHand() != null) {
 				ItemStack item = p.getInventory().getItemInMainHand();
-				if (item.getItemMeta()!=null&&item.getItemMeta().getDisplayName()!=null) {
+				if (item.getItemMeta() != null && item.getItemMeta().getDisplayName() != null) {
 					if (item.getItemMeta().getDisplayName().contains(SheepItems.ABILITY_3_NAME)) {
 						if (tier >= Tier.TIER_3_3) {
-							
-							new Task(0,1) {
-								
+
+							new Task(0, 1) {
+
+								@Override
 								public void run() {
-									if() {
-									if (p.getHealth()+FEEDING_TIME_REGENERATION>=p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()) {
-										p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
-									} else if {
-										p.setHealth(p.getHealth()+FEEDING_TIME_REGENERATION);
+									if (2 + 2 == 4) {
+										if (p.getHealth() + FEEDING_TIME_REGENERATION >= p
+												.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()) {
+											p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+										} else if (2 + 2 == 4) {
+											p.setHealth(p.getHealth() + FEEDING_TIME_REGENERATION);
+										}
+									} else {
+										cancel();
 									}
-								} else {
-									cancel();
 								}
+							};
+
+							new Cooldown(p, 2, cooldown);
+							if (p.getHealth() + heal >= p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()) {
+								p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+							} else {
+								p.setHealth(p.getHealth() + heal);
 							}
-							}; 
-							
-						
-						new Cooldown(p, 2, cooldown);
-						if (p.getHealth()+heal>=p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()) {
-							p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
-						} else {
-							p.setHealth(p.getHealth()+heal);
 						}
 					}
 				}
