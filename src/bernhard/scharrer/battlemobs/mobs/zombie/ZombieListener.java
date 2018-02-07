@@ -125,20 +125,21 @@ public class ZombieListener extends MobListener {
 	}
 
 	@EventHandler
-	public void innerStrengh(PlayerInteractEvent event) {
+	public void innerStrengh(PlayerInteractEvent event, EntityDamageByEntityEvent event_2) {
 
 		if (super.valid(event.getPlayer())) {
 
 			Player p = event.getPlayer();
 			int tier = super.getMobTier(p);
 			ItemStack hand = p.getInventory().getItemInMainHand();
+			LivingEntity lentity = (LivingEntity) event_2.getEntity();
 
 			if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
 				if (tier != Tier.UNDEFINED && Item.valid(hand)) {
 
 					if (hand.getItemMeta().getDisplayName().contains(ZombieItems.ABILITY_3_NAME)) {
-
+						
 						new Cooldown(p, 2,
 								tier >= Tier.TIER_3_2 ? INNERSTRENGH_COOLDOWN_TIER2 : INNERSTRENGH_COOLDOWN_TIER1);
 
