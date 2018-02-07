@@ -108,7 +108,7 @@ public class PigListener extends MobListener {
 							Player tracked = null;
 							
 							for (Entity e : p.getNearbyEntities(SADDLE_DOWN_RADIUS, SADDLE_DOWN_RADIUS, SADDLE_DOWN_RADIUS)) {
-								if (e instanceof Player) {
+								if (e instanceof Player && super.valid(((Player) e))) {
 									tracked = (Player) e;
 									break;
 								}
