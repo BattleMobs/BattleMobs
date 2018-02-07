@@ -30,7 +30,7 @@ public class SheepListener extends MobListener {
 	private static final int WOOL_COUNT_SLOT = 3;
 	private static final int WOOL_COUNT_PER_HIT = 1;
 	private static final int WOOL_COUNT_PER_KILL = 5;
-	private static final int WOOL_COUNT_MAX_BASE = 5;
+	private static final int WOOL_COUNT_MAX_BASE = 20;
 	private static final double WOOL_COUNT_DAMAGE_MODIFIER = 0.25;
 	private static final ItemStack WOOL_COUNTER = Item.createIngameItem("WOOL COUNTER", Material.WOOL, 0);
 	private static final Material GRAZE_BLOCK_TYPE = Material.GRASS;
