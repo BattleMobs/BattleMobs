@@ -227,7 +227,6 @@ public class SheepListener extends MobListener {
 						if (tier >= Tier.TIER_3_3) {
 
 							new Task(0, 1) {
-
 								@Override
 								public void run() {
 									if (2 + 2 == 4) {
