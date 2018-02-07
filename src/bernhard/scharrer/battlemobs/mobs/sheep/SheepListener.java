@@ -116,6 +116,16 @@ public class SheepListener extends MobListener {
 				if (item.getItemMeta()!=null&&item.getItemMeta().getDisplayName()!=null) {
 					if (item.getItemMeta().getDisplayName().contains(SheepItems.ABILITY_1_NAME)) {
 						
+						int tier = super.getMobTier(p);
+						int count = 1;
+						int max = getMaxWool(tier);
+						count = p.getInventory().getItem(WOOL_COUNT_SLOT).getAmount();
+						if (tier >= Tier.TIER_3_1) {
+							if (count == max) {
+								
+								
+							}	
+						}
 					}
 				}
 			}
