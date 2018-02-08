@@ -11,9 +11,9 @@ public class SpiderItems implements MobItems {
 	static final String ABILITY_1_NAME = "Eye Of The Spider";
     static final String ABILITY_1_DESC = "Left click to poison your enemy by 3s.#Deals 3 hearts damage.##Right click to shoot a toxic arrow.#Arrow deals 2 hearts damage#and posions your enemy#for 3s.";
     static final String ABILITY_2_NAME = "Web Bomb";
-    static final String ABILITY_2_DESC = "Throws a web bomb. After 2s#a web ball gets summoned.#If you hit a enemy with it,#the ball summons immidiately.#Don't get into your own ball!";
+    static final String ABILITY_2_DESC = "Throws a web bomb. After 4s#a web ball gets summoned.#If you hit a enemy with it,#the ball summons immidiately.#Don't get into your own ball!";
     static final String ABILITY_3_NAME = "Spider Army";
-    static final String ABILITY_3_DESC = "Summons 3 little cave spiders#which support you against your enemies.#Spiders despawn after 15s.";
+    static final String ABILITY_3_DESC = "Summons 3 little cave spiders#which support you against your enemies.#Spiders despawn after 5s.";
     static final String ABILITY_1_TIER_1_NAME = "More arrows, more hits!";
     static final String ABILITY_1_TIER_1_DESC = "Shoot 3 times instead of only one time.";
     static final String ABILITY_2_TIER_1_NAME = "Web Cluster";

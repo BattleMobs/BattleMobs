@@ -1,9 +1,17 @@
 package bernhard.scharrer.battlemobs.mobs.spider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.CaveSpider;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,16 +30,31 @@ import bernhard.scharrer.battlemobs.util.Tier;
 
 public class SpiderListener extends MobListener {
 	
+	private static final PotionEffect POISON_3S = new PotionEffect(PotionEffectType.POISON, 60, 1);
+	private static final PotionEffect POISON_5S = new PotionEffect(PotionEffectType.POISON, 100, 0);
+	private static final PotionEffect SPEED_1_15S = new PotionEffect(PotionEffectType.SPEED, 300, 0);
+	private static final PotionEffect SPEED_2_15S = new PotionEffect(PotionEffectType.SPEED, 300, 3);
+	private static final PotionEffect STRENGTH_15S = new PotionEffect(PotionEffectType.POISON, 300, 2);
+	
 	private static final float EYE_OF_SPIDER_SPEED = 2.5f;
-	private static final PotionEffect POISON_3S = new PotionEffect(PotionEffectType.POISON, 60, 0);
 	private static final double EYE_OF_SPIDER_DAMAGE = 6;
 	private static final double EYE_OF_SPIDER_ARROW_DAMAGE = 4;
 	private static final double EYE_OF_SPIDER_ARROW_AMOUNT = 3;
 	private static final String ARROW_TAG_HEADER = "񗉷;";
-	private static final int WEB_BOMB_EXPLODE_TIME = 4;
-	private static final float WEB_BOMB_SPEED = 1.2f;
-	private static final ItemStack WEB_BOMB_ITEM = Item.createIngameItem("", Material.STRING, 0);
 	private static final double EYE_OF_SPIDER_KNOCKBACK = 1.2;
+	
+	private static final int WEB_BOMB_EXPLODE_TIME = 4;
+	private static final float WEB_BOMB_DECAY_TIME = 3;
+	private static final float WEB_BOMB_SPEED = 1.2f;
+	private static final int WEB_BOMB_RADIUS = 8;
+	private static final int WEB_BOMB_COOLDOWN = 40;
+	private static final double WEB_BOMB_DAMAGE = 5;
+	private static final ItemStack WEB_BOMB_ITEM = Item.createIngameItem("", Material.STRING, 0);
+	
+	private static final int SPIDER_ARMY_COOLDOWN = 60;
+	private static final float SPIDER_ARMY_DESPAWN = 5;
+	private static final double SPIDER_ARMY_RADIUS = 15;
+	private static final int SPIDER_ARMY_SPIDERS = 3;
 
 	@EventHandler
 	public void onHit(EntityDamageByEntityEvent event) {
@@ -118,8 +141,56 @@ public class SpiderListener extends MobListener {
 					 */
 					if (p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains(SpiderItems.ABILITY_2_NAME)) {
 						
-						new WebBomb(p);
+						new Cooldown(p, 1, WEB_BOMB_COOLDOWN);
+						new WebBomb(p, tier);
 						
+					}
+					
+					/*
+					 * spider army
+					 */
+					if (p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains(SpiderItems.ABILITY_3_NAME)) {
+						
+						
+						
+						LivingEntity target = null;
+						
+						for (Entity nearBy : p.getNearbyEntities(SPIDER_ARMY_RADIUS, SPIDER_ARMY_RADIUS, SPIDER_ARMY_RADIUS)) {
+							if (nearBy instanceof LivingEntity) {
+								target = (LivingEntity) nearBy;
+								break;
+							}
+						}
+						
+						if (target!=null) {
+							new Cooldown(p, 2, (tier>=Tier.TIER_3_3?SPIDER_ARMY_COOLDOWN/2:SPIDER_ARMY_COOLDOWN));
+							
+							List<CaveSpider> spiders = new ArrayList<>();
+							
+							for (int n=0;n<(tier>=Tier.TIER_3_3?SPIDER_ARMY_SPIDERS*2:SPIDER_ARMY_SPIDERS);n++) {
+								spiders.add((CaveSpider) p.getWorld().spawnEntity(p.getLocation(), EntityType.CAVE_SPIDER));
+							}
+							
+							for (CaveSpider spider : spiders) {
+								spider.setHealth(1);
+								spider.setTarget(target);
+								spider.addPotionEffect(tier >= Tier.TIER_3_2 ? SPEED_2_15S : SPEED_1_15S);
+								spider.addPotionEffect(STRENGTH_15S);
+							}
+							
+							new Task(SPIDER_ARMY_DESPAWN) {
+								public void run() {
+									for (CaveSpider spider : spiders) {
+										if (spider != null) {
+											spider.remove();
+										}
+									}
+								}
+							};
+						} else {
+							p.playSound(p.getLocation(), Sound.BLOCK_NOTE_SNARE, 1, 1);
+						}
+
 					}
 					
 				}
@@ -137,29 +208,81 @@ public class SpiderListener extends MobListener {
 		arrow.setShooter(p);
 	}
 	
+	private void createWebBall(org.bukkit.entity.Item item, int size, int tier) {
+		
+		for (int z = item.getLocation().getBlockZ()-size-1;z<item.getLocation().getBlockZ()+size;z++) {
+			for (int y = item.getLocation().getBlockY()-size-1;y<item.getLocation().getBlockY()+size;y++) {
+				for (int x = item.getLocation().getBlockX()-size-1;x<item.getLocation().getBlockX()+size;x++) {
+					
+					if (item.getLocation().distance(new Location(item.getWorld(), x, y, z)) <= size/2) {
+						replace(tier, item.getWorld().getBlockAt(x, y, z));
+					}
+					
+				}
+			}
+		}
+		
+	}
+	
+	private void replace(int tier, Block block) {
+		if (block!=null) {
+			if (block.getType() == Material.AIR) {
+				block.setType(Material.WEB);
+				new Task(tier >= Tier.TIER_2_2?2*WEB_BOMB_DECAY_TIME:WEB_BOMB_DECAY_TIME) {
+					public void run() {
+						block.setType(Material.AIR);
+					}
+				};
+			}
+		}
+		
+	}
+	
 	private class WebBomb {
 		
-		public WebBomb(Player p) {
+		public WebBomb(Player p, int tier) {
 			org.bukkit.entity.Item item = p.getWorld().dropItem(p.getEyeLocation(), WEB_BOMB_ITEM);
 			item.setVelocity(p.getEyeLocation().getDirection().normalize().multiply(WEB_BOMB_SPEED));
 			item.setCustomNameVisible(false);
 			
 			new Task(0,0.2f) {
 				private int time = 0;
-				@SuppressWarnings("deprecation")
 				@Override
 				public void run() {
-					if (time >= WEB_BOMB_EXPLODE_TIME) {
-						item.remove();
-						p.getWorld().playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
-						p.getWorld().playEffect(item.getLocation(), Effect.EXPLOSION_HUGE, 1);
-						cancel();
+					if (time/5 >= WEB_BOMB_EXPLODE_TIME) {
+						explode(p, item, tier);
 					} else {
-						// TODO
+						for (Entity nearBy : item.getNearbyEntities(1, 1, 1)) {
+							if (nearBy != p && nearBy instanceof LivingEntity) {
+								explode(p, item, tier);
+							}
+						}
 					}
 					
 					time++;
 				}
+				
+				@SuppressWarnings("deprecation")
+				private void explode(Player p, org.bukkit.entity.Item item, int tier) {
+					
+					if (tier >= Tier.TIER_2_2) {
+						for (Entity enemy : item.getNearbyEntities(WEB_BOMB_RADIUS, WEB_BOMB_RADIUS, WEB_BOMB_RADIUS)) {
+							if (enemy != p && enemy instanceof LivingEntity) {
+								((LivingEntity) enemy).damage(WEB_BOMB_DAMAGE);
+								if (tier >= Tier.TIER_2_3) {
+									((LivingEntity) enemy).addPotionEffect(POISON_5S);
+								}
+							}
+						}
+					}
+					
+					createWebBall(item, WEB_BOMB_RADIUS, tier);
+					item.remove();
+					p.getWorld().playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
+					p.getWorld().playEffect(item.getLocation(), Effect.EXPLOSION_HUGE, 1);
+					cancel();
+				}
+				
 			};
 		}
 		
