@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.CaveSpider;
 import org.bukkit.entity.Entity;
@@ -27,6 +28,8 @@ import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Task;
 import bernhard.scharrer.battlemobs.util.Tier;
+import net.minecraft.server.v1_12_R1.EnumParticle;
+import net.minecraft.server.v1_12_R1.PacketPlayOutWorldParticles;
 
 public class SpiderListener extends MobListener {
 	
@@ -245,13 +248,22 @@ public class SpiderListener extends MobListener {
 			item.setVelocity(p.getEyeLocation().getDirection().normalize().multiply(WEB_BOMB_SPEED));
 			item.setCustomNameVisible(false);
 			
-			new Task(0,0.2f) {
+			new Task(0,0.1f) {
 				private int time = 0;
 				@Override
 				public void run() {
 					if (time/5 >= WEB_BOMB_EXPLODE_TIME) {
 						explode(p, item, tier);
 					} else {
+						float x = (float) item.getLocation().getX();
+						float y = (float) item.getLocation().getY();
+						float z = (float) item.getLocation().getZ();
+						PacketPlayOutWorldParticles particles = new PacketPlayOutWorldParticles(EnumParticle.CRIT, true, x, y, z, 0, 0, 0, 0, 0, 0);
+						for (Entity nearBy : item.getNearbyEntities(30, 30, 30)) {
+							if (nearBy instanceof CraftPlayer) {
+								((CraftPlayer) nearBy).getHandle().playerConnection.sendPacket(particles);
+							}
+						}
 						for (Entity nearBy : item.getNearbyEntities(1, 1, 1)) {
 							if (nearBy != p && nearBy instanceof LivingEntity) {
 								explode(p, item, tier);
