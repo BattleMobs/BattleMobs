@@ -10,6 +10,7 @@ import bernhard.scharrer.battlemobs.mobs.pig.BattlePig;
 import bernhard.scharrer.battlemobs.mobs.sheep.BattleSheep;
 import bernhard.scharrer.battlemobs.mobs.skeleton.BattleSkeleton;
 import bernhard.scharrer.battlemobs.mobs.spider.BattleSpider;
+import bernhard.scharrer.battlemobs.mobs.villager.BattleVillager;
 import bernhard.scharrer.battlemobs.mobs.zombie.BattleZombie;
 
 public class MobMaster {
@@ -30,6 +31,7 @@ public class MobMaster {
 		battlemobs.add(new BattleSkeleton());
 		battlemobs.add(new BattleSheep());
 		battlemobs.add(new BattleSpider());
+		battlemobs.add(new BattleVillager());
 		
 	}
 	

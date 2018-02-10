@@ -50,11 +50,11 @@ public class SpiderListener extends MobListener {
 	private static final float WEB_BOMB_DECAY_TIME = 3;
 	private static final float WEB_BOMB_SPEED = 1.2f;
 	private static final int WEB_BOMB_RADIUS = 8;
-	private static final int WEB_BOMB_COOLDOWN = 40;
+	private static final int WEB_BOMB_COOLDOWN = 25;
 	private static final double WEB_BOMB_DAMAGE = 5;
 	private static final ItemStack WEB_BOMB_ITEM = Item.createIngameItem("", Material.STRING, 0);
 	
-	private static final int SPIDER_ARMY_COOLDOWN = 60;
+	private static final int SPIDER_ARMY_COOLDOWN = 40;
 	private static final float SPIDER_ARMY_DESPAWN = 5;
 	private static final double SPIDER_ARMY_RADIUS = 15;
 	private static final int SPIDER_ARMY_SPIDERS = 3;
