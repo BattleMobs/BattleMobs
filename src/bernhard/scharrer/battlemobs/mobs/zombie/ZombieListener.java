@@ -34,7 +34,7 @@ public class ZombieListener extends MobListener {
 	private static final int SWORD_DAMAGE_TIER2 = 5;
 	private static final int SWORD_DAMAGE_TIER3 = 6;
 
-	private static final float BLOODRAGE_SPEED = 1f;
+	private static final float BLOODRAGE_SPEED = 0.7f;
 	private static final int BLOODRAGE_COOLDOWN_TIER1 = 30;
 	private static final int BLOODRAGE_COOLDOWN_TIER2 = 20;
 	private static final int BLOODRAGE_DURATION = 5;
@@ -67,13 +67,13 @@ public class ZombieListener extends MobListener {
 						LivingEntity lentity = (LivingEntity) event.getEntity();
 						lentity.addPotionEffect(tier >= 4 ? SWORD_SLOW_2 : SWORD_SLOW_1);
 						if (tier >= Tier.TIER_3_1) {
-							lentity.damage(BLOODRAGE_ON >= 1? SWORD_DAMAGE_TIER1*2:SWORD_DAMAGE_TIER1);
+							lentity.damage(BLOODRAGE_ON >= 1? SWORD_DAMAGE_TIER1*0.4:SWORD_DAMAGE_TIER1);
 						}
 						else if (tier >= Tier.TIER_2_2) {
-							lentity.damage(BLOODRAGE_ON >= 1? SWORD_DAMAGE_TIER2*2:SWORD_DAMAGE_TIER2);
+							lentity.damage(BLOODRAGE_ON >= 1? SWORD_DAMAGE_TIER2*0.4:SWORD_DAMAGE_TIER2);
 						}
 						else if (tier >= Tier.TIER_1_2) {
-							lentity.damage(BLOODRAGE_ON >= 1? SWORD_DAMAGE_TIER3*2:SWORD_DAMAGE_TIER3);
+							lentity.damage(BLOODRAGE_ON >= 1? SWORD_DAMAGE_TIER3*0.4:SWORD_DAMAGE_TIER3);
 						}
 
 					}
@@ -125,14 +125,13 @@ public class ZombieListener extends MobListener {
 	}
 
 	@EventHandler
-	public void innerStrengh(PlayerInteractEvent event, EntityDamageByEntityEvent event_2) {
+	public void innerStrengh(PlayerInteractEvent event) {
 
 		if (super.valid(event.getPlayer())) {
 
 			Player p = event.getPlayer();
 			int tier = super.getMobTier(p);
 			ItemStack hand = p.getInventory().getItemInMainHand();
-			LivingEntity lentity = (LivingEntity) event_2.getEntity();
 
 			if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
