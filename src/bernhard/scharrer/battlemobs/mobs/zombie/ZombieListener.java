@@ -3,6 +3,7 @@ package bernhard.scharrer.battlemobs.mobs.zombie;
 import javax.annotation.Generated;
 
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
@@ -19,6 +20,7 @@ import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Scheduler;
+import bernhard.scharrer.battlemobs.util.Task;
 import bernhard.scharrer.battlemobs.util.Tier;
 import de.robingrether.idisguise.api.DisguiseAPI;
 import de.robingrether.idisguise.disguise.AgeableDisguise;
@@ -47,6 +49,10 @@ public class ZombieListener extends MobListener {
 	private static final int INNERSTRENGH_KNOCKBACK = 9001; // keinen plan wie du des daun sklaierst berni :D
 	private static final PotionEffect INNERSTRENGH_RESISTANCE = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 900, 2);
 	private static final PotionEffect INNERSTRENGH_Regeneration = new PotionEffect(PotionEffectType.REGENERATION, 900, 2);
+	private static final double INNERSTRENGH_RADIUS = 2;
+	private static final double INNERSTRENGH_FORCE = 0.8;
+
+
 
 	@EventHandler
 	public void onDamage(EntityDamageByEntityEvent event) {
@@ -132,7 +138,7 @@ public class ZombieListener extends MobListener {
 			Player p = event.getPlayer();
 			int tier = super.getMobTier(p);
 			ItemStack hand = p.getInventory().getItemInMainHand();
-
+			
 			if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
 				if (tier != Tier.UNDEFINED && Item.valid(hand)) {
@@ -150,11 +156,39 @@ public class ZombieListener extends MobListener {
 						
 						event.setCancelled(true);
 
-						Scheduler.schedule(INNERSTRENGH_DURATION * 20, () -> {
-							if (super.valid(p)) {
-								BattleMobs.getAPI().disguise(p, new AgeableDisguise(DisguiseType.ZOMBIE));
+						Task period = new Task(0,0.2f) {
+							
+							
+							@Override
+							public void run() {
+								
+								if (ZombieListener.this.valid(p)) {
+									for (Entity e : p.getNearbyEntities(INNERSTRENGH_RADIUS, INNERSTRENGH_RADIUS, INNERSTRENGH_RADIUS)) {
+										
+										if (e instanceof LivingEntity) {
+											
+											LivingEntity enemy = (LivingEntity) e;
+											
+											enemy.setVelocity(enemy.getEyeLocation().toVector().subtract(p.getLocation().toVector()).normalize().multiply(INNERSTRENGH_FORCE));
+											
+										}
+									}
+								}
 							}
-						});
+						}; 
+						
+						new Task(INNERSTRENGH_DURATION) {
+							
+							@Override
+							public void run() {
+								if (ZombieListener.this.valid(p)) {
+									BattleMobs.getAPI().disguise(p, new AgeableDisguise(DisguiseType.ZOMBIE));
+								}
+								period.cancel();
+							}
+						};
+						
+						
 
 					}
 				}
