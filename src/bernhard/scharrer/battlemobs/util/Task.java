@@ -16,7 +16,7 @@ public abstract class Task implements Runnable {
 		this.task = Bukkit.getScheduler().scheduleSyncDelayedTask(BattleMobs.getInstance(), this, (long) (20.0f*seconds));
 	}
 	
-	protected void cancel() {
+	public void cancel() {
 		Scheduler.cancel(task);
 	}
 	
