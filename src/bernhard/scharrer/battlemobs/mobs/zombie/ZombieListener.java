@@ -36,7 +36,7 @@ public class ZombieListener extends MobListener {
 	private static final int SWORD_DAMAGE_TIER2 = 5;
 	private static final int SWORD_DAMAGE_TIER3 = 6;
 
-	private static final float BLOODRAGE_SPEED = 0.7f;
+	private static final float BLOODRAGE_SPEED = 0.6f;
 	private static final int BLOODRAGE_COOLDOWN_TIER1 = 30;
 	private static final int BLOODRAGE_COOLDOWN_TIER2 = 20;
 	private static final int BLOODRAGE_DURATION = 5;
@@ -45,12 +45,10 @@ public class ZombieListener extends MobListener {
 	private static final int INNERSTRENGH_DURATION = 15;
 	private static final int INNERSTRENGH_COOLDOWN_TIER1 = 60;
 	private static final int INNERSTRENGH_COOLDOWN_TIER2 = 40;
-	private static final int INNERSTRENGH_DEMAGE = 4;
-	private static final int INNERSTRENGH_KNOCKBACK = 9001; // keinen plan wie du des daun sklaierst berni :D
-	private static final PotionEffect INNERSTRENGH_RESISTANCE = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 900, 2);
-	private static final PotionEffect INNERSTRENGH_Regeneration = new PotionEffect(PotionEffectType.REGENERATION, 900, 2);
+	private static final PotionEffect INNERSTRENGH_RESISTANCE = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 250, 2);
+	private static final PotionEffect INNERSTRENGH_Regeneration = new PotionEffect(PotionEffectType.REGENERATION, 250, 2);
 	private static final double INNERSTRENGH_RADIUS = 2;
-	private static final double INNERSTRENGH_FORCE = 0.8;
+	private static final double INNERSTRENGH_FORCE = 1.3;
 
 
 
@@ -183,6 +181,7 @@ public class ZombieListener extends MobListener {
 							public void run() {
 								if (ZombieListener.this.valid(p)) {
 									BattleMobs.getAPI().disguise(p, new AgeableDisguise(DisguiseType.ZOMBIE));
+									
 								}
 								period.cancel();
 							}
