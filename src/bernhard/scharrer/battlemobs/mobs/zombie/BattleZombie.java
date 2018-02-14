@@ -12,7 +12,7 @@ import de.robingrether.idisguise.disguise.MobDisguise;
 
 public class BattleZombie extends BattleMob {
 
-	private static final double ZOMBIE_HEALTH = 40;
+	private static final double ZOMBIE_HEALTH = 24;
 	protected static final float ZOMBIE_WALSPEED = 0.28f;
 	
 	public BattleZombie() {

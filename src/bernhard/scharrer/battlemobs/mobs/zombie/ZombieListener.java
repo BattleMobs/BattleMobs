@@ -1,12 +1,13 @@
 package bernhard.scharrer.battlemobs.mobs.zombie;
 
-import javax.annotation.Generated;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -19,14 +20,10 @@ import bernhard.scharrer.battlemobs.BattleMobs;
 import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Item;
-import bernhard.scharrer.battlemobs.util.Scheduler;
 import bernhard.scharrer.battlemobs.util.Task;
 import bernhard.scharrer.battlemobs.util.Tier;
-import de.robingrether.idisguise.api.DisguiseAPI;
 import de.robingrether.idisguise.disguise.AgeableDisguise;
-import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
-import de.robingrether.idisguise.disguise.MobDisguise;
 
 public class ZombieListener extends MobListener {
 
@@ -40,17 +37,19 @@ public class ZombieListener extends MobListener {
 	private static final int BLOODRAGE_COOLDOWN_TIER1 = 30;
 	private static final int BLOODRAGE_COOLDOWN_TIER2 = 20;
 	private static final int BLOODRAGE_DURATION = 5;
-	private static int BLOODRAGE_ON = 0;
+	
+	private static List<Player> bloodrage = new ArrayList<>();
+	private static List<Player> inner_strength = new ArrayList<>();
 
 	private static final int INNERSTRENGH_DURATION = 15;
 	private static final int INNERSTRENGH_COOLDOWN_TIER1 = 60;
 	private static final int INNERSTRENGH_COOLDOWN_TIER2 = 40;
-	private static final PotionEffect INNERSTRENGH_RESISTANCE = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 250, 2);
-	private static final PotionEffect INNERSTRENGH_Regeneration = new PotionEffect(PotionEffectType.REGENERATION, 250, 2);
+	protected static final double INNER_STRENGTH_DAMAGE = 2;
+	private static final PotionEffect INNERSTRENGH_RESISTANCE = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20+INNERSTRENGH_DURATION*20, 2);
+	private static final PotionEffect INNERSTRENGH_REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 20+INNERSTRENGH_DURATION*20, 2);
 	private static final double INNERSTRENGH_RADIUS = 2;
 	private static final double INNERSTRENGH_FORCE = 1.3;
-
-
+	private static final PotionEffect FLASH = new PotionEffect(PotionEffectType.BLINDNESS, 20, 0);
 
 	@EventHandler
 	public void onDamage(EntityDamageByEntityEvent event) {
@@ -71,13 +70,13 @@ public class ZombieListener extends MobListener {
 						LivingEntity lentity = (LivingEntity) event.getEntity();
 						lentity.addPotionEffect(tier >= 4 ? SWORD_SLOW_2 : SWORD_SLOW_1);
 						if (tier >= Tier.TIER_3_1) {
-							lentity.damage(BLOODRAGE_ON >= 1? SWORD_DAMAGE_TIER1*0.4:SWORD_DAMAGE_TIER1);
+							lentity.damage(bloodrage.contains(p)? SWORD_DAMAGE_TIER1*0.4:SWORD_DAMAGE_TIER1);
 						}
 						else if (tier >= Tier.TIER_2_2) {
-							lentity.damage(BLOODRAGE_ON >= 1? SWORD_DAMAGE_TIER2*0.4:SWORD_DAMAGE_TIER2);
+							lentity.damage(bloodrage.contains(p)? SWORD_DAMAGE_TIER2*0.4:SWORD_DAMAGE_TIER2);
 						}
 						else if (tier >= Tier.TIER_1_2) {
-							lentity.damage(BLOODRAGE_ON >= 1? SWORD_DAMAGE_TIER3*0.4:SWORD_DAMAGE_TIER3);
+							lentity.damage(bloodrage.contains(p)? SWORD_DAMAGE_TIER3*0.4:SWORD_DAMAGE_TIER3);
 						}
 
 					}
@@ -105,22 +104,38 @@ public class ZombieListener extends MobListener {
 						&& hand.getItemMeta().getDisplayName() != null) {
 
 					if (hand.getItemMeta().getDisplayName().contains(ZombieItems.ABILITY_2_NAME)) {
-
+						
+						if (inner_strength.contains(p)) {
+							p.playSound(p.getLocation(), Sound.BLOCK_NOTE_SNARE, 1, 1);
+							return;
+						}
+						
+						bloodrage.add(p);
+						
 						new Cooldown(p, 1, tier >= Tier.TIER_2_2 ? BLOODRAGE_COOLDOWN_TIER2 : BLOODRAGE_COOLDOWN_TIER1);
 
 						p.setWalkSpeed(BLOODRAGE_SPEED);
 						p.playSound(p.getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_DOOR_WOOD, 1, 1);
-						BLOODRAGE_ON = 1;
 
-						Scheduler.schedule(BLOODRAGE_DURATION * 20, () -> {
-
-							if (super.valid(p)) {
-								p.setWalkSpeed(BattleZombie.ZOMBIE_WALSPEED);
-								p.playSound(p.getLocation(), Sound.ENTITY_ZOMBIE_INFECT, 1, 1);
-								BLOODRAGE_ON  =0;
+						Task period = new Task(0, 0.1f) {
+							public void run() {
+								if (ZombieListener.this.valid(p)) {
+									p.playSound(p.getLocation(), Sound.ENTITY_ZOMBIE_INFECT, 1, 1.5f);
+								}
 							}
-
-						});
+						};
+						
+						new Task(BLOODRAGE_DURATION) {
+							public void run() {
+								if (ZombieListener.this.valid(p)) {
+									p.setWalkSpeed(BattleZombie.ZOMBIE_WALSPEED);
+									p.playSound(p.getLocation(), Sound.ENTITY_ZOMBIE_INFECT, 1, 0.5f);
+									bloodrage.remove(p);
+									p.addPotionEffect(FLASH);
+								}
+								period.cancel();
+							}
+						};
 
 					}
 				}
@@ -143,6 +158,13 @@ public class ZombieListener extends MobListener {
 
 					if (hand.getItemMeta().getDisplayName().contains(ZombieItems.ABILITY_3_NAME)) {
 						
+						if (bloodrage.contains(p)) {
+							p.playSound(p.getLocation(), Sound.BLOCK_NOTE_SNARE, 1, 1);
+							return;
+						}
+						
+						inner_strength.add(p);
+						
 						new Cooldown(p, 2,
 								tier >= Tier.TIER_3_2 ? INNERSTRENGH_COOLDOWN_TIER2 : INNERSTRENGH_COOLDOWN_TIER1);
 
@@ -150,7 +172,7 @@ public class ZombieListener extends MobListener {
 						BattleMobs.getAPI().disguise(p, DisguiseType.GIANT.newInstance());
 						p.addPotionEffect(INNERSTRENGH_RESISTANCE);
 
-						if (tier >= Tier.TIER_2_3) {p.addPotionEffect(INNERSTRENGH_Regeneration);}
+						if (tier >= Tier.TIER_2_3) {p.addPotionEffect(INNERSTRENGH_REGENERATION);}
 						
 						event.setCancelled(true);
 
@@ -161,13 +183,19 @@ public class ZombieListener extends MobListener {
 							public void run() {
 								
 								if (ZombieListener.this.valid(p)) {
-									for (Entity e : p.getNearbyEntities(INNERSTRENGH_RADIUS, INNERSTRENGH_RADIUS, INNERSTRENGH_RADIUS)) {
+									for (Entity e : p.getNearbyEntities(INNERSTRENGH_RADIUS, INNERSTRENGH_RADIUS*5, INNERSTRENGH_RADIUS)) {
 										
 										if (e instanceof LivingEntity) {
 											
 											LivingEntity enemy = (LivingEntity) e;
 											
+											if (enemy instanceof Player) {
+												if (((Player) enemy).getGameMode() == GameMode.SURVIVAL) {
+													((Player) enemy).playSound(enemy.getLocation(), Sound.ENTITY_ZOMBIE_AMBIENT, 1, 0.5f);
+												} else continue;
+											}
 											enemy.setVelocity(enemy.getEyeLocation().toVector().subtract(p.getLocation().toVector()).normalize().multiply(INNERSTRENGH_FORCE));
+											enemy.damage(INNER_STRENGTH_DAMAGE);
 											
 										}
 									}
@@ -181,7 +209,8 @@ public class ZombieListener extends MobListener {
 							public void run() {
 								if (ZombieListener.this.valid(p)) {
 									BattleMobs.getAPI().disguise(p, new AgeableDisguise(DisguiseType.ZOMBIE));
-									
+									inner_strength.remove(p);
+									p.addPotionEffect(FLASH);
 								}
 								period.cancel();
 							}
