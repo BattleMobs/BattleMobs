@@ -39,6 +39,7 @@ public class SpiderListener extends MobListener {
 	private static final PotionEffect SPEED_2_15S = new PotionEffect(PotionEffectType.SPEED, 300, 3);
 	private static final PotionEffect STRENGTH_15S = new PotionEffect(PotionEffectType.POISON, 300, 2);
 	
+	private static final int EYE_OF_SPIDER_COOLDOWN = 5;
 	private static final float EYE_OF_SPIDER_SPEED = 2.5f;
 	private static final double EYE_OF_SPIDER_DAMAGE = 6;
 	private static final double EYE_OF_SPIDER_ARROW_DAMAGE = 4;
@@ -50,11 +51,11 @@ public class SpiderListener extends MobListener {
 	private static final float WEB_BOMB_DECAY_TIME = 3;
 	private static final float WEB_BOMB_SPEED = 1.2f;
 	private static final int WEB_BOMB_RADIUS = 8;
-	private static final int WEB_BOMB_COOLDOWN = 25;
+	private static final int WEB_BOMB_COOLDOWN = 20;
 	private static final double WEB_BOMB_DAMAGE = 5;
 	private static final ItemStack WEB_BOMB_ITEM = Item.createIngameItem("", Material.STRING, 0);
 	
-	private static final int SPIDER_ARMY_COOLDOWN = 40;
+	private static final int SPIDER_ARMY_COOLDOWN = 30;
 	private static final float SPIDER_ARMY_DESPAWN = 5;
 	private static final double SPIDER_ARMY_RADIUS = 15;
 	private static final int SPIDER_ARMY_SPIDERS = 3;
@@ -136,7 +137,7 @@ public class SpiderListener extends MobListener {
 							shotArrow(p);
 						}
 						
-						new Cooldown(p, 0, 10);
+						new Cooldown(p, 0, EYE_OF_SPIDER_COOLDOWN);
 					}
 					
 					/*
@@ -181,8 +182,27 @@ public class SpiderListener extends MobListener {
 								spider.addPotionEffect(STRENGTH_15S);
 							}
 							
+							Task period = new Task(0, 0.5f) {
+								public void run() {
+									for (CaveSpider spider :spiders) {
+										if (spider != null) {
+											LivingEntity newTarget = null;
+											if (spider.getTarget()!=null) {
+												if (spider.getTarget() == p || spider.getTarget().isDead()) {
+													newTarget = getNearBy(spider, p);
+												}
+											} else {
+												newTarget = getNearBy(spider, p);
+											}
+											if (newTarget!=null) spider.setTarget(newTarget);
+										}
+									}
+								}
+							};
+							
 							new Task(SPIDER_ARMY_DESPAWN) {
 								public void run() {
+									period.cancel();
 									for (CaveSpider spider : spiders) {
 										if (spider != null) {
 											spider.remove();
@@ -200,6 +220,16 @@ public class SpiderListener extends MobListener {
 			}
 			
 		}
+	}
+	
+	private LivingEntity getNearBy(CaveSpider spider, Player owner) {
+		for (Entity nearBy : spider.getNearbyEntities(SPIDER_ARMY_RADIUS, SPIDER_ARMY_RADIUS, SPIDER_ARMY_RADIUS)) {
+			if (nearBy instanceof LivingEntity && nearBy != owner) {
+				return (LivingEntity) nearBy;
+			}
+		}
+		spider.remove();
+		return null;
 	}
 
 	private void shotArrow(Player p) {
