@@ -13,15 +13,15 @@ public class PlayerItemDamageListener extends Listener {
 	
 	@EventHandler
 	public void onItemDamage(BlockBreakEvent e) {
-		Player p = e.getPlayer();
-		if (p.getInventory().getItemInMainHand()!=null) {
-			item = p.getInventory().getItemInMainHand();
-			meta = item.getItemMeta();
-			temp = new ItemStack(item.getType(), item.getAmount(), (short) 0);
-			temp.setItemMeta(meta);
-			p.getInventory().setItemInMainHand(temp);
-			p.updateInventory();
-		}
+//		Player p = e.getPlayer();
+//		if (p.getInventory().getItemInMainHand()!=null) {
+//			item = p.getInventory().getItemInMainHand();
+//			meta = item.getItemMeta();
+//			temp = new ItemStack(item.getType(), item.getAmount(), (short) 0);
+//			temp.setItemMeta(meta);
+//			p.getInventory().setItemInMainHand(temp);
+//			p.updateInventory();
+//		}
 	}
 	
 }

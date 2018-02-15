@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.DyeColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +20,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 import bernhard.scharrer.battlemobs.BattleMobs;
 import bernhard.scharrer.battlemobs.mobs.MobListener;
@@ -37,12 +41,16 @@ public class SheepListener extends MobListener {
 	private static final ItemStack WOOL_COUNTER = Item.createIngameItem("WOOL COUNTER", Material.WOOL, 0);
 	private static final Material GRAZE_BLOCK_TYPE = Material.GRASS;
 	private static final float GRAZE_TIMEOUT = 3;
-	private static final PotionEffect JUMP_BOOST = new PotionEffect(PotionEffectType.JUMP, 60, 3);
+	private static final PotionEffect JUMP_BOOST = new PotionEffect(PotionEffectType.JUMP, 80, 3);
 
 	private static final List<Material> GRAZE_BANNED_BLOCKS = new ArrayList<>();
 	private static final int FEEDING_TIME_HEAL = 4;
-	private static final int FEEDING_TIME_REGENERATION = 4;
+	private static final int FEEDING_TIME_REGENERATION = 2;
 	private static final int FEEDING_TIME_COOLDOWN = 15;
+	private static final float FEEDING_TIME_REGENERATION_TIMEOUT = 3;
+	private static final double GRAZE_SLOW_RADIUS = 1.5;
+	private static final PotionEffect GRAZE_SLOW = new PotionEffect(PotionEffectType.SLOW, 20, 2);
+	private static final PotionEffect GRAZE_INVISIBLE = new PotionEffect(PotionEffectType.INVISIBILITY, (int) (20+GRAZE_TIMEOUT*20), 0);
 
 	private static List<Player> god_sheeps = new ArrayList<>();
 
@@ -184,29 +192,89 @@ public class SheepListener extends MobListener {
 				ItemStack item = p.getInventory().getItemInMainHand();
 				if (item.getItemMeta() != null && item.getItemMeta().getDisplayName() != null) {
 					if (item.getItemMeta().getDisplayName().contains(SheepItems.ABILITY_2_NAME)) {
-
-						Block block = e.getClickedBlock();
-
-						if (GRAZE_BANNED_BLOCKS.contains(block.getType()))
-							return;
-
-						Material type = block.getType();
-						byte data = block.getData();
-						p.getWorld().getBlockAt(block.getLocation()).setType(GRAZE_BLOCK_TYPE);
-
-						new Task(GRAZE_TIMEOUT) {
-							@Override
-							public void run() {
-								p.getWorld().getBlockAt(block.getLocation()).setType(type);
-								p.getWorld().getBlockAt(block.getLocation()).setData(data);
+						
+						int tier = super.getMobTier(p);
+						
+						if (tier != Tier.UNDEFINED) {
+							
+							if (!GRAZE_BANNED_BLOCKS.contains(e.getClickedBlock().getType())) {
+								List<Block> blocks = new ArrayList<>();
+								
+								blocks.add(e.getClickedBlock());
+								blocks.add(e.getClickedBlock().getRelative(BlockFace.NORTH));
+								blocks.add(e.getClickedBlock().getRelative(BlockFace.SOUTH));
+								blocks.add(e.getClickedBlock().getRelative(BlockFace.EAST));
+								blocks.add(e.getClickedBlock().getRelative(BlockFace.WEST));
+								
+								for (Block block : blocks) {
+									if (!GRAZE_BANNED_BLOCKS.contains(block.getType())) {
+										replaceBlock(GRAZE_BLOCK_TYPE, block, p);
+									}
+								}
+								
+								Block onTop = e.getClickedBlock().getRelative(BlockFace.UP);
+								if (onTop.getType() == Material.AIR) {
+									replaceBlock(getGrazeMaterial(tier), onTop, p);
+									new SlowTracker(onTop.getLocation(), p);
+								}
 							}
-						};
+							
+						}
 
 					}
 				}
 			}
 		}
 
+	}
+	
+	private class SlowTracker {
+		
+		private org.bukkit.entity.Item item;
+		
+		public SlowTracker(Location tracker, Player p) {
+			
+			item = p.getWorld().dropItem(tracker.add(0.5, 0.5, 0.5), Item.createItem("", "", Material.CAKE_BLOCK, 1, 0));
+			item.setVelocity(new Vector(0, 0, 0));
+			
+			Task period = new Task(0,0.2f) {
+				public void run() {
+					if (item != null) {
+						for (Entity nearBy : item.getNearbyEntities(GRAZE_SLOW_RADIUS, GRAZE_SLOW_RADIUS, GRAZE_SLOW_RADIUS)) {
+							if (nearBy instanceof LivingEntity) {
+								if (nearBy != p) {
+									((LivingEntity) nearBy).addPotionEffect(GRAZE_SLOW);
+								}
+							}
+						}
+					}
+				}
+			};
+			
+			new Task(GRAZE_TIMEOUT) {
+				public void run() {
+					if (item != null) item.remove();
+					period.cancel();
+				}
+			};
+			
+		}
+		
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void replaceBlock(Material material, Block block, Player p) {
+		Material type = block.getType();
+		byte data = block.getData();
+		p.getWorld().getBlockAt(block.getLocation()).setType(material);
+
+		new Task(GRAZE_TIMEOUT) {
+			@Override
+			public void run() {
+				p.getWorld().getBlockAt(block.getLocation()).setType(type);
+				p.getWorld().getBlockAt(block.getLocation()).setData(data);
+			}
+		};
 	}
 
 	@EventHandler
@@ -226,19 +294,25 @@ public class SheepListener extends MobListener {
 					if (item.getItemMeta().getDisplayName().contains(SheepItems.ABILITY_3_NAME)) {
 						if (tier >= Tier.TIER_3_3) {
 
-							new Task(0, 1) {
-								@Override
+							Task heal_task = new Task(0, 0.5f) {
 								public void run() {
-									if (2 + 2 == 4) {
-										if (p.getHealth() + FEEDING_TIME_REGENERATION >= p
-												.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()) {
+									
+									if (SheepListener.this.valid(p)) {
+										if (p.getHealth() + FEEDING_TIME_REGENERATION >= p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()) {
 											p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
-										} else if (2 + 2 == 4) {
+										} else {
 											p.setHealth(p.getHealth() + FEEDING_TIME_REGENERATION);
 										}
 									} else {
 										cancel();
 									}
+									
+								}
+							};
+							
+							new Task(FEEDING_TIME_REGENERATION_TIMEOUT) {
+								public void run() {
+									heal_task.cancel();
 								}
 							};
 
@@ -285,6 +359,17 @@ public class SheepListener extends MobListener {
 			return FEEDING_TIME_COOLDOWN + 10;
 		else
 			return FEEDING_TIME_HEAL;
+
+	}
+	
+	private Material getGrazeMaterial(int tier) {
+
+		if (tier >= Tier.TIER_2_3)
+			return Material.RED_ROSE;
+		else if (tier >= Tier.TIER_2_2)
+			return Material.LONG_GRASS;
+		else
+			return Material.DEAD_BUSH;
 
 	}
 
