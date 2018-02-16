@@ -12,7 +12,7 @@ public enum MobType {
 	SHEEP (3,Locations.sheep_statue, 91, new Location(Locations.lobby_world, -1.5f, 50.5f, 29.5f, 0, -6)),
 	SPIDER (5,Locations.spider_statue, 52, new Location(Locations.lobby_world, -3.5f, 50.5f, 28.5f, 19, 1)),
 	VILLAGER (5,Locations.villager_statue, 120, new Location(Locations.lobby_world, -4.5f, 50.5f, 26.5f, 46, -7)),
-	CHICKEN (8,Locations.pig_statue, 93, new Location(Locations.lobby_world, -4.5f, 50.5f, 26.5f, 46, -7)),
+	CHICKEN (8,Locations.chicken_statue, 93, new Location(Locations.lobby_world, -25.5f, 50.5f, 5.5f, 42, 4)),
 	WITCH (10,Locations.pig_statue, 66, new Location(Locations.lobby_world, -4.5f, 50.5f, 26.5f, 46, -7)),
 	SLIME (15,Locations.pig_statue, 55, new Location(Locations.lobby_world, -4.5f, 50.5f, 26.5f, 46, -7)),
 	MAGMA_SLIME (15,Locations.pig_statue, 62,new Location(Locations.lobby_world, -4.5f, 50.5f, 26.5f, 46, -7)),

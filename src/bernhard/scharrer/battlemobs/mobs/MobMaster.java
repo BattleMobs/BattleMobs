@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import bernhard.scharrer.battlemobs.data.PlayerData;
+import bernhard.scharrer.battlemobs.mobs.chicken.BattleChicken;
 import bernhard.scharrer.battlemobs.mobs.pig.BattlePig;
 import bernhard.scharrer.battlemobs.mobs.sheep.BattleSheep;
 import bernhard.scharrer.battlemobs.mobs.skeleton.BattleSkeleton;
@@ -32,6 +33,7 @@ public class MobMaster {
 		battlemobs.add(new BattleSheep());
 		battlemobs.add(new BattleSpider());
 		battlemobs.add(new BattleVillager());
+		battlemobs.add(new BattleChicken());
 		
 	}
 	
