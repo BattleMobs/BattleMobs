@@ -9,24 +9,24 @@ import bernhard.scharrer.battlemobs.util.Tier;
 
 public class ChickenItems implements MobItems {
 
-	static final String ABILITY_1_NAME = "Cursed Sword";
-    static final String ABILITY_1_DESC = "1s slow effect.";
-    static final String ABILITY_2_NAME = "Blood Rage";
-    static final String ABILITY_2_DESC = "Gives you speed effect for 5s,#with a cooldown of 30s.";
-    static final String ABILITY_3_NAME = "Inner Strengh";
-    static final String ABILITY_3_DESC = "Turn into a giant for 15s.#During the duration you get resistance.#60s cooldown.";
-    static final String ANILITY_1_TIER_1_NAME = "Zombie and Steel";
-    static final String ANILITY_1_TIER_1_DESC = "Increase the slowness by 1.5s and#replace stone sword with a iron sword.";
-    static final String ANILITY_2_TIER_1_NAME = "Gonna go fast!";
-    static final String ANILITY_2_TIER_1_DESC = "Reduce the ability cooldown to 20s.";
-    static final String ANILITY_3_TIER_1_NAME = "Inner Health";
-    static final String ANILITY_3_TIER_1_DESC = "Get a regeneration effect while in giant form.";
-    static final String ANILITY_1_TIER_2_NAME = "Why not diamond?";
-    static final String ANILITY_1_TIER_2_DESC = "Slow effect stays now for 2.5s and#turn the iron sword into a diamond sword.";
-    static final String ANILITY_2_TIER_2_NAME = "RAGE!";
-    static final String ANILITY_2_TIER_2_DESC = "Doubles the damage you deal while rage.";
-    static final String ANILITY_3_TIER_2_NAME = "True Giant!";
-    static final String ANILITY_3_TIER_2_DESC = "Reduce the cooldown to 40s and#damage the player in a 15 blocks radius.";
+	static final String ABILITY_1_NAME = "Sharp Wings";
+    static final String ABILITY_1_DESC = "Schoot a feather for long#distance and deal demage.";
+    static final String ABILITY_2_NAME = "Egg Bomb";
+    static final String ABILITY_2_DESC = "Throw a exploding egg.";
+    static final String ABILITY_3_NAME = "Flappy jump";
+    static final String ABILITY_3_DESC = "Jump in the air and deal demage on#the landing.";
+    static final String ANILITY_1_TIER_1_NAME = "More Sharper Wings";
+    static final String ANILITY_1_TIER_1_DESC = "Deal more demage.";
+    static final String ANILITY_2_TIER_1_NAME = "Dangerous Yellow";
+    static final String ANILITY_2_TIER_1_DESC = "Make a greater explosion.";
+    static final String ANILITY_3_TIER_1_NAME = "Vacuum Jump";
+    static final String ANILITY_3_TIER_1_DESC = "Suck the enemy in the center of your jump.";
+    static final String ANILITY_1_TIER_2_NAME = "Three for one Feather";
+    static final String ANILITY_1_TIER_2_DESC = "Shoot three feathers at once.";
+    static final String ANILITY_2_TIER_2_NAME = "Great Egg!";
+    static final String ANILITY_2_TIER_2_DESC = "Gives the player knockback on impact.";
+    static final String ANILITY_3_TIER_2_NAME = "Double Jump";
+    static final String ANILITY_3_TIER_2_DESC = "Deal at the beginning of the Jump#demage as well.";
 	
 	@Override
 	public ItemStack getMobInventoryItem(int tier) {
