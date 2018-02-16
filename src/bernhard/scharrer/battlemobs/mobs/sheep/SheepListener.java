@@ -10,6 +10,7 @@ import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -24,12 +25,15 @@ import org.bukkit.util.Vector;
 
 import bernhard.scharrer.battlemobs.BattleMobs;
 import bernhard.scharrer.battlemobs.mobs.MobListener;
+import bernhard.scharrer.battlemobs.mobs.MobType;
 import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Task;
 import bernhard.scharrer.battlemobs.util.Tier;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.SheepDisguise;
+import net.minecraft.server.v1_12_R1.EnumParticle;
+import net.minecraft.server.v1_12_R1.PacketPlayOutWorldParticles;
 
 public class SheepListener extends MobListener {
 
@@ -84,7 +88,7 @@ public class SheepListener extends MobListener {
 
 		if (e.getDamager() instanceof Player) {
 			Player p = (Player) e.getDamager();
-			if (super.valid(p)) {
+			if (super.valid(p, MobType.SHEEP)) {
 				if (p.getInventory().getItemInMainHand() != null) {
 
 					ItemStack item = p.getInventory().getItemInMainHand();
@@ -124,7 +128,7 @@ public class SheepListener extends MobListener {
 
 	@EventHandler
 	public void onShearRightClick(PlayerInteractEvent e) {
-		if (super.valid(e.getPlayer()) && e.getAction() == Action.RIGHT_CLICK_AIR
+		if (super.valid(e.getPlayer(), MobType.SHEEP) && e.getAction() == Action.RIGHT_CLICK_AIR
 				|| e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Player p = e.getPlayer();
 			if (p.getInventory().getItemInMainHand() != null) {
@@ -147,7 +151,7 @@ public class SheepListener extends MobListener {
 
 											@SuppressWarnings("deprecation")
 											public void run() {
-												if (SheepListener.this.valid(p)) {
+												if (SheepListener.this.valid(p, MobType.SHEEP)) {
 													n++;
 													n = n % DyeColor.values().length;
 													DyeColor color = DyeColor.values()[n];
@@ -186,7 +190,7 @@ public class SheepListener extends MobListener {
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
 
-		if (super.valid(e.getPlayer()) && e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+		if (super.valid(e.getPlayer(), MobType.SHEEP) && e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Player p = e.getPlayer();
 			if (p.getInventory().getItemInMainHand() != null) {
 				ItemStack item = p.getInventory().getItemInMainHand();
@@ -240,6 +244,17 @@ public class SheepListener extends MobListener {
 			Task period = new Task(0,0.2f) {
 				public void run() {
 					if (item != null) {
+						
+						Location loc = item.getLocation().add(Vector.getRandom().multiply(0.5));
+						PacketPlayOutWorldParticles particles = new PacketPlayOutWorldParticles(EnumParticle.REDSTONE, true, (float) loc.getX(), (float) loc.getY(), (float) loc.getZ(), 1, 0, 0, 0, 0, 0);
+						
+						for (Entity nearBy : item.getNearbyEntities(10, 10, 10)) {
+							if (nearBy instanceof Player) {
+								Player p = (Player) nearBy;
+								((CraftPlayer) nearBy).getHandle().playerConnection.sendPacket(particles);
+							}
+						}
+						
 						for (Entity nearBy : item.getNearbyEntities(GRAZE_SLOW_RADIUS, GRAZE_SLOW_RADIUS, GRAZE_SLOW_RADIUS)) {
 							if (nearBy instanceof LivingEntity) {
 								if (nearBy != p) {
@@ -280,7 +295,7 @@ public class SheepListener extends MobListener {
 	@EventHandler
 	public void onRightClick(PlayerInteractEvent e) {
 
-		if (super.valid(e.getPlayer()) && e.getAction() == Action.RIGHT_CLICK_AIR
+		if (super.valid(e.getPlayer(), MobType.SHEEP) && e.getAction() == Action.RIGHT_CLICK_AIR
 				|| e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Player p = e.getPlayer();
 
@@ -293,11 +308,11 @@ public class SheepListener extends MobListener {
 				if (item.getItemMeta() != null && item.getItemMeta().getDisplayName() != null) {
 					if (item.getItemMeta().getDisplayName().contains(SheepItems.ABILITY_3_NAME)) {
 						if (tier >= Tier.TIER_3_3) {
-
+							
 							Task heal_task = new Task(0, 0.5f) {
 								public void run() {
 									
-									if (SheepListener.this.valid(p)) {
+									if (SheepListener.this.valid(p, MobType.SHEEP)) {
 										if (p.getHealth() + FEEDING_TIME_REGENERATION >= p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()) {
 											p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
 										} else {

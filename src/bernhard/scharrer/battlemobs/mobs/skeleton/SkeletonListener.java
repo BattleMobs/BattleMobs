@@ -22,6 +22,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
 import bernhard.scharrer.battlemobs.mobs.MobListener;
+import bernhard.scharrer.battlemobs.mobs.MobType;
 import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Locations;
@@ -56,7 +57,7 @@ public class SkeletonListener extends MobListener {
 				if (event.getEntity() instanceof Player) {
 					Player p = (Player) event.getEntity();
 					int tier = super.getMobTier(p);
-					if (super.valid(p)) {
+					if (super.valid(p, MobType.SKELETON)) {
 						if (tier!=Tier.UNDEFINED) {
 							
 							double damage = ARROW_DAMAGE;
@@ -124,7 +125,7 @@ public class SkeletonListener extends MobListener {
 	
 	@EventHandler
 	public void onClick(PlayerInteractEvent event) {
-		if (super.valid(event.getPlayer().getWorld())) {
+		if (super.valid(event.getPlayer(), MobType.SKELETON)) {
 			
 			Player p = event.getPlayer();
 			int tier = super.getMobTier(p);
@@ -172,7 +173,7 @@ public class SkeletonListener extends MobListener {
 						new Task(0, 1) {
 							
 							public void run() {
-								if (SkeletonListener.this.valid(p) && p.isInsideVehicle() && p.getVehicle() instanceof SkeletonHorse) {
+								if (SkeletonListener.this.valid(p, MobType.SKELETON) && p.isInsideVehicle() && p.getVehicle() instanceof SkeletonHorse) {
 									if (p.getHealth()+RIDE_OF_DEATH_HEAL>=p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()) {
 										p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
 									} else {
@@ -194,7 +195,7 @@ public class SkeletonListener extends MobListener {
 	
 	@EventHandler
 	public void onExit(EntityDismountEvent event) {
-		if (super.valid(event.getDismounted())) {
+		if (super.validEntity(event.getDismounted())) {
 			if (event.getDismounted() instanceof SkeletonHorse) {
 				event.getDismounted().remove();
 			}
@@ -211,7 +212,7 @@ public class SkeletonListener extends MobListener {
 				
 				if (spins++ < amount) {
 					
-					if (SkeletonListener.this.valid(enemy)) {
+					if (SkeletonListener.this.validEntity(enemy)) {
 						rotateHead(enemy);
 						enemy.damage(BONE_BREAKER_DAMAGE);
 						Locations.map_world.playSound(enemy.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);

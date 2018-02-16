@@ -24,6 +24,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import bernhard.scharrer.battlemobs.mobs.MobListener;
+import bernhard.scharrer.battlemobs.mobs.MobType;
 import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Task;
@@ -65,7 +66,7 @@ public class SpiderListener extends MobListener {
 		if (event.getDamager() instanceof Player) {
 			Player p = (Player) event.getDamager();
 			int tier = super.getMobTier(p);
-			if (super.valid(p) && tier != Tier.UNDEFINED) {
+			if (super.valid(p, MobType.SPIDER) && tier != Tier.UNDEFINED) {
 				if (Item.valid(p.getInventory().getItemInMainHand())) {
 					/*
 					 * eye of the spider melee
@@ -112,7 +113,7 @@ public class SpiderListener extends MobListener {
 	public void onInteract(PlayerInteractEvent event) {
 		Player p = event.getPlayer();
 		int tier = super.getMobTier(p);
-		if (super.valid(p) && tier != Tier.UNDEFINED) {
+		if (super.valid(p, MobType.SPIDER) && tier != Tier.UNDEFINED) {
 			
 			if (Item.valid(p.getInventory().getItemInMainHand())) {
 				if (event.getAction()==Action.RIGHT_CLICK_AIR||event.getAction()==Action.RIGHT_CLICK_BLOCK) {
