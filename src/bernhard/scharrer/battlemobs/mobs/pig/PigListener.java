@@ -17,6 +17,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
 import bernhard.scharrer.battlemobs.mobs.MobListener;
+import bernhard.scharrer.battlemobs.mobs.MobType;
 import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Scheduler;
 import bernhard.scharrer.battlemobs.util.Tier;
@@ -42,10 +43,8 @@ public class PigListener extends MobListener {
 
 	@EventHandler (priority=EventPriority.HIGHEST)
 	public void onDamage(EntityDamageByEntityEvent event) {
-		
-		if (super.valid(event.getEntity().getWorld())) {
 			
-			if (event.getDamager() instanceof Player) {
+			if (super.validEntity(event.getDamager()) && event.getDamager() instanceof Player) {
 				
 				Player p = (Player) event.getDamager();
 				int tier = super.getMobTier(p);
@@ -74,7 +73,6 @@ public class PigListener extends MobListener {
 					
 				} else event.setCancelled(true);
 				
-			}
 			
 		}
 		
@@ -83,7 +81,7 @@ public class PigListener extends MobListener {
 	@EventHandler
 	public void onInteract(PlayerInteractEvent event) {
 		
-		if (super.valid(event.getPlayer().getWorld())) {
+		if (super.valid(event.getPlayer(), MobType.PIG)) {
 			
 			Player p = event.getPlayer();
 			int tier = super.getMobTier(p);
@@ -108,14 +106,14 @@ public class PigListener extends MobListener {
 							Player tracked = null;
 							
 							for (Entity e : p.getNearbyEntities(SADDLE_DOWN_RADIUS, SADDLE_DOWN_RADIUS, SADDLE_DOWN_RADIUS)) {
-								if (e instanceof Player && super.valid(((Player) e))) {
+								if (e instanceof Player && super.valid(((Player) e), MobType.PIG)) {
 									tracked = (Player) e;
 									break;
 								}
 							}
 							
 							if (tracked!=null) {
-								if (super.valid(event.getPlayer().getWorld())) {
+								if (super.validEntity(event.getPlayer())) {
 									
 									event.setCancelled(true);
 									
@@ -178,7 +176,7 @@ public class PigListener extends MobListener {
 	
 	@EventHandler
 	public void onExit(EntityDismountEvent event) {
-		if (super.valid(event.getDismounted())) {
+		if (super.validEntity(event.getDismounted())) {
 			if (event.getDismounted() instanceof Player) {
 				Player p = (Player) event.getDismounted();
 				int tier = super.getMobTier(p);
@@ -195,7 +193,7 @@ public class PigListener extends MobListener {
 			
 			this.task = Scheduler.schedule(20, 5, ()->{
 				
-				if (context.valid(pig) && context.valid(target) && pig.getPassengers().contains(target)) {
+				if (context.valid(pig, MobType.PIG) && context.validEntity(target) && pig.getPassengers().contains(target)) {
 					
 					if (target instanceof LivingEntity) {
 						LivingEntity lentity = (LivingEntity) target;

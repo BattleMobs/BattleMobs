@@ -18,6 +18,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import bernhard.scharrer.battlemobs.BattleMobs;
 import bernhard.scharrer.battlemobs.mobs.MobListener;
+import bernhard.scharrer.battlemobs.mobs.MobType;
 import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Task;
@@ -53,7 +54,7 @@ public class ZombieListener extends MobListener {
 
 	@EventHandler
 	public void onDamage(EntityDamageByEntityEvent event) {
-		if (super.valid(event.getEntity()) && super.valid(event.getDamager())) {
+		if (super.validEntity(event.getEntity()) && super.validEntity(event.getDamager())) {
 
 			if (event.getDamager() instanceof Player) {
 
@@ -61,7 +62,7 @@ public class ZombieListener extends MobListener {
 				int tier = super.getMobTier(p);
 				ItemStack hand = p.getInventory().getItemInMainHand();
 
-				if (tier != -1 && hand != null && hand.getItemMeta() != null
+				if (tier != Tier.UNDEFINED && hand != null && hand.getItemMeta() != null
 						&& hand.getItemMeta().getDisplayName().contains(ZombieItems.ABILITY_1_NAME)) {
 
 					event.setCancelled(true);
@@ -92,7 +93,7 @@ public class ZombieListener extends MobListener {
 	@EventHandler
 	public void bloodRage(PlayerInteractEvent event) {
 
-		if (super.valid(event.getPlayer())) {
+		if (super.valid(event.getPlayer(), MobType.ZOMBIE)) {
 
 			Player p = event.getPlayer();
 			int tier = super.getMobTier(p);
@@ -119,7 +120,7 @@ public class ZombieListener extends MobListener {
 
 						Task period = new Task(0, 0.1f) {
 							public void run() {
-								if (ZombieListener.this.valid(p)) {
+								if (ZombieListener.this.valid(p, MobType.ZOMBIE)) {
 									p.playSound(p.getLocation(), Sound.ENTITY_ZOMBIE_INFECT, 1, 1.5f);
 								}
 							}
@@ -127,7 +128,7 @@ public class ZombieListener extends MobListener {
 						
 						new Task(BLOODRAGE_DURATION) {
 							public void run() {
-								if (ZombieListener.this.valid(p)) {
+								if (ZombieListener.this.valid(p, MobType.ZOMBIE)) {
 									p.setWalkSpeed(BattleZombie.ZOMBIE_WALSPEED);
 									p.playSound(p.getLocation(), Sound.ENTITY_ZOMBIE_INFECT, 1, 0.5f);
 									bloodrage.remove(p);
@@ -146,7 +147,7 @@ public class ZombieListener extends MobListener {
 	@EventHandler
 	public void innerStrengh(PlayerInteractEvent event) {
 
-		if (super.valid(event.getPlayer())) {
+		if (super.valid(event.getPlayer(), MobType.ZOMBIE)) {
 
 			Player p = event.getPlayer();
 			int tier = super.getMobTier(p);
@@ -182,7 +183,7 @@ public class ZombieListener extends MobListener {
 							@Override
 							public void run() {
 								
-								if (ZombieListener.this.valid(p)) {
+								if (ZombieListener.this.valid(p, MobType.ZOMBIE)) {
 									for (Entity e : p.getNearbyEntities(INNERSTRENGH_RADIUS, INNERSTRENGH_RADIUS*5, INNERSTRENGH_RADIUS)) {
 										
 										if (e instanceof LivingEntity) {
@@ -207,7 +208,7 @@ public class ZombieListener extends MobListener {
 							
 							@Override
 							public void run() {
-								if (ZombieListener.this.valid(p)) {
+								if (ZombieListener.this.valid(p, MobType.ZOMBIE)) {
 									BattleMobs.getAPI().disguise(p, new AgeableDisguise(DisguiseType.ZOMBIE));
 									inner_strength.remove(p);
 									p.addPotionEffect(FLASH);

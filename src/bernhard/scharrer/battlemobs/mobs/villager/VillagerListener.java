@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.util.Vector;
 
 import bernhard.scharrer.battlemobs.mobs.MobListener;
+import bernhard.scharrer.battlemobs.mobs.MobType;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Tier;
 
@@ -31,7 +32,7 @@ public class VillagerListener extends MobListener {
 		if (event.getDamager() instanceof Player && event.getEntity() instanceof LivingEntity) {
 			Player p = (Player) event.getDamager();
 			LivingEntity enemy = (LivingEntity) event.getEntity();
-			if (valid(p)) {
+			if (valid(p, MobType.VILLAGER)) {
 				int tier = super.getMobTier(p);
 				if (tier!=Tier.UNDEFINED && Item.valid(p.getInventory().getItemInMainHand())) {
 					if (p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains(VillagerItems.ABILITY_1_NAME)) {
