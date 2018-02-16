@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import bernhard.scharrer.battlemobs.mobs.MobListener;
+import bernhard.scharrer.battlemobs.mobs.MobType;
 import bernhard.scharrer.battlemobs.mobs.zombie.ZombieItems;
 import bernhard.scharrer.battlemobs.util.Item;
 
@@ -23,7 +24,7 @@ public class ChickenListener extends MobListener {
 	@EventHandler
 	public void sharpFeather(PlayerInteractEvent event) {
 		
-		if(super.valid(event.getPlayer())) {
+		if(super.valid(event.getPlayer(), MobType.CHICKEN)) {
 			
 			Player p = event.getPlayer();
 			int tier = super.getMobTier(p);
