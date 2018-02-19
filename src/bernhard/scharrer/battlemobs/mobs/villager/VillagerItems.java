@@ -11,9 +11,9 @@ public class VillagerItems implements MobItems {
 	static final String ABILITY_1_NAME = "Bad Trade";
     static final String ABILITY_1_DESC = "Deals 2 hearts damage and#swaps positions of you and#your enemy.##Always sets your head perfectly#aiming towards your enemy.";
     static final String ABILITY_2_NAME = "Payback";
-    static final String ABILITY_2_DESC = "Curses your enemy on hit.#Your enemy gets 3 hearts#damage after 3s and you#steal 1$ from him on succesfully#execution of the curse.#(only if your enemy has the money)";
+    static final String ABILITY_2_DESC = "Curses nearest enemies in#a 5 block radius.#Your enemies get 3 hearts#damage after 3s and you#steal 1$ from them for each succesfully#execution of the curse.#(only if your enemy has the money)";
     static final String ABILITY_3_NAME = "Metalworking";
-    static final String ABILITY_3_DESC = "Throws a anvil. Enemies nearby#get blasted away and get#damaged by 5 hearts.";
+    static final String ABILITY_3_DESC = "Throws a anvil. Enemies nearby#get blasted away and get#damaged by 5 hearts.#They also get a little dizzy.";
     static final String ABILITY_1_TIER_1_NAME = "";
     static final String ABILITY_1_TIER_1_DESC = "";
     static final String ABILITY_2_TIER_1_NAME = "";
