@@ -19,6 +19,7 @@ import org.bukkit.util.Vector;
 
 import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.mobs.MobType;
+import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Tier;
 import net.minecraft.server.v1_12_R1.EnumParticle;
@@ -27,8 +28,13 @@ import net.minecraft.server.v1_12_R1.PacketPlayOutWorldParticles;
 public class VillagerListener extends MobListener {
 	
 	private static final double BAD_TRADE_DAMAGE = 4;
-	private static final Vector X_DIR = new Vector(1, 0, 0);
 	private static final double METALWORKING_POWER = 1.2;
+	private static final String ANVIL_TAG = "񘿼�8";
+	
+	private static final double ANVIL_RADIUS = 5;
+	private static final double ANVIL_DAMAGE = 10;
+	private static final double ANVIL_POWER = 2.2;
+	private static final int ANVIL_COOLDOWN = 5;
 
 	@EventHandler
 	public void onInteract(PlayerInteractEntityEvent event) {
@@ -55,31 +61,16 @@ public class VillagerListener extends MobListener {
 						
 						enemy.teleport(ploc);
 						
-						float angle = 0;
-						
-						double dx = ploc.getX() - eloc.getX();
-						double dy = ploc.getZ() - eloc.getZ();
-						
-						double tempAngle = Math.toDegrees(Math.atan(Math.abs(dx)/Math.abs(dy)));
-						
-						if (dx > 0 && dy > 0) {
-							angle = (float) (180 - tempAngle);
-						} else if (dx < 0 && dy > 0) {
-							angle = (float) (180 + tempAngle);
-						} else if (dx > 0 && dy < 0) {
-							angle = (float) (tempAngle);
-						} else if (dx < 0 && dy < 0) {
-							angle = (float) (-tempAngle);
-						}
-						
-						angle *= -1;
+						float angle = (enemy.getLocation().getYaw()+180);
 						
 						p.teleport(eloc);
-						p.getLocation().setYaw(angle);
+						Location loc = new Location(p.getWorld(), eloc.getX(), eloc.getY(), eloc.getZ(), angle, 0);
+						p.teleport(loc);
+						p.sendMessage("Angle: "+angle);
 						
-						p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_TRADING, 1, 1);
+						p.playSound(enemy.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1.5f);
 						if (enemy instanceof Player) {
-							((Player)enemy).playSound(enemy.getLocation(), Sound.ENTITY_VILLAGER_TRADING, 1, 1);
+							((Player)enemy).playSound(enemy.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1.5f);
 						}
 						
 					}
@@ -99,6 +90,10 @@ public class VillagerListener extends MobListener {
 					
 					FallingBlock block = p.getWorld().spawnFallingBlock(p.getEyeLocation(), new MaterialData(Material.ANVIL));
 					block.setVelocity(p.getLocation().getDirection().normalize().add(new Vector(0, 0.5, 0)).normalize().multiply(METALWORKING_POWER));
+					block.setCustomName(ANVIL_TAG);
+					block.setCustomNameVisible(false);
+					
+					new Cooldown(p, 2, ANVIL_COOLDOWN);
 					
 				}
 			}
@@ -110,16 +105,24 @@ public class VillagerListener extends MobListener {
 	public void onChange(EntityChangeBlockEvent event) {
 		if (event.getEntity() instanceof FallingBlock) {
 			FallingBlock fblock = (FallingBlock) event.getEntity();
-			if (fblock.getMaterial()==Material.ANVIL) {
+			if (fblock.getMaterial()==Material.ANVIL && fblock.getCustomName().equals(ANVIL_TAG)) {
 				event.setCancelled(true);
 				Location loc = fblock.getLocation();
 				PacketPlayOutWorldParticles particles = new PacketPlayOutWorldParticles(EnumParticle.EXPLOSION_LARGE, true, (float) loc.getX(), (float) loc.getY(), (float) loc.getZ(), 1, 0, 0, 0, 0, 0);
 				for (Entity nearBy : fblock.getNearbyEntities(25, 25, 25)) {
 					if (nearBy instanceof Player) {
 						Player p = (Player) nearBy;
-						p.playSound(p.getLocation(), Sound.BLOCK_SAND_PLACE, 1, 1);
+						p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
 						p.playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
 						((CraftPlayer) nearBy).getHandle().playerConnection.sendPacket(particles);
+					}
+				}
+				
+				for (Entity nearBy : fblock.getNearbyEntities(ANVIL_RADIUS, ANVIL_RADIUS, ANVIL_RADIUS)) {
+					if (nearBy instanceof LivingEntity) {
+						LivingEntity enemy = (LivingEntity) nearBy;
+						enemy.damage(ANVIL_DAMAGE);
+						enemy.setVelocity(enemy.getEyeLocation().toVector().subtract(fblock.getLocation().toVector()).normalize().multiply(ANVIL_POWER));
 					}
 				}
 				
