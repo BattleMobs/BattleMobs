@@ -1,6 +1,8 @@
 package bernhard.scharrer.battlemobs;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -41,7 +43,13 @@ public class BattleMobs extends JavaPlugin {
 	} 
 	@Override
 	public void onDisable() {
+		for (Player p : Bukkit.getOnlinePlayers()) p.kickPlayer("§8[§6BattleMobs§8] §7Server is restarting!");
 		MobMaster.cleanUp();
+		for (Entity e : Locations.map_world.getEntities()) {
+			if (e instanceof LivingEntity && !(e instanceof Player) ) {
+				e.remove();
+			}
+		}
 	}
 
 	public static BattleMobs getInstance() {
