@@ -34,6 +34,7 @@ public abstract class MobStatue extends Listener {
 		entity.setGoalTarget(null);
 		entity.setOnFire(0);
 		entity.setNoAI(true);
+		entity.setSilent(true);
 		entity.setHeadRotation(loc.getYaw());
 		((CraftWorld)(loc.getWorld())).addEntity(entity, SpawnReason.CUSTOM);
 		

@@ -23,13 +23,10 @@ public class PlayerJoinListener extends Listener {
 		MobMaster.loadPlayer(p);
 		PlayerUtils.reset(p);
 		PlayerUtils.receiveLobbyItems(p);
-
 		
 		p.sendTitle("§6BattleMobs", "§7Willkommen " + p.getName(), 10, 40, 10);
 		p.playSound(Locations.lobby, Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
 		
-//		if (data == null) Database.createInsert(p);
-//		data = Database.getData(p);
 		Scoreboard.updateScoreboard(p);
 
 		

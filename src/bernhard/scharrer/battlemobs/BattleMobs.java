@@ -45,6 +45,7 @@ public class BattleMobs extends JavaPlugin {
 	public void onDisable() {
 		for (Player p : Bukkit.getOnlinePlayers()) p.kickPlayer("§8[§6BattleMobs§8] §7Server is restarting!");
 		MobMaster.cleanUp();
+		MapHandler.cleanUp();
 		for (Entity e : Locations.map_world.getEntities()) {
 			if (e instanceof LivingEntity && !(e instanceof Player) ) {
 				e.remove();

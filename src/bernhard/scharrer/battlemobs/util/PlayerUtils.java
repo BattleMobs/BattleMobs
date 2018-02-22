@@ -96,9 +96,15 @@ public class PlayerUtils {
 						+(p.isOp()?"'OWNER'":"'MEMBER'")+",0,0)");
 				
 				for (MobType type : MobType.values()) {
-					Database.execute("INSERT INTO MOBS (UUID, MOB, EXP, TIER, KILLS, DEATHS) VALUES ('"
-							+p.getUniqueId().toString()+"','"
-							+type.toString()+"',0,1,0,0)");
+					if (type.getLevel() > 1) {
+						Database.execute("INSERT INTO MOBS (UUID, MOB, EXP, TIER, KILLS, DEATHS) VALUES ('"
+								+p.getUniqueId().toString()+"','"
+								+type.toString()+"',0,1,0,0)");
+					} else {
+						Database.execute("INSERT INTO MOBS (UUID, MOB, EXP, TIER, KILLS, DEATHS) VALUES ('"
+								+p.getUniqueId().toString()+"','"
+								+type.toString()+"',0,3,0,0)");
+					}
 				}
 				
 			}
