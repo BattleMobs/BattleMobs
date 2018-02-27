@@ -19,7 +19,7 @@ import bernhard.scharrer.battlemobs.mobs.MobItems;
 public class MapHandler {
 	
 	private static List<Location> locations = new ArrayList<>();
-	private static final Random random = new Random();
+	private static final float TIME_BEFORE_SPAWNING = 5;
 	
 	private static List<Spawnpoint> spawnpoints = new ArrayList<>();
 	
@@ -28,8 +28,14 @@ public class MapHandler {
 		locations.add(new Location(Locations.map_world, 264.5f, 5.5f, -189.5f, 180, 0));
 		locations.add(new Location(Locations.map_world, 264.5f, 5.5f, -253.5f, 0, 0));
 		
-		spawnpoints.add(new Spawnpoint(new Location(Locations.map_world, 264.5f, 5.5f, -189.5f, 180, 0)));
-		spawnpoints.add(new Spawnpoint(new Location(Locations.map_world, 264.5f, 5.5f, -253.5f, 0, 0)));
+		new Task(TIME_BEFORE_SPAWNING) {
+			
+			@Override
+			public void run() {
+				spawnpoints.add(new Spawnpoint(new Location(Locations.map_world, 264.5f, 5.5f, -189.5f, 180, 0)));
+				spawnpoints.add(new Spawnpoint(new Location(Locations.map_world, 264.5f, 5.5f, -253.5f, 0, 0)));
+			}
+		};
 		
 	}
 	
@@ -40,8 +46,7 @@ public class MapHandler {
 		System.out.println(sp.count);
 		Collections.shuffle(spawnpoints);
 		
-		Location loc = locations.get(random.nextInt(locations.size()));
-		p.teleport(loc);
+		p.teleport(sp.getLocation());
 		
 		p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
 		
@@ -72,7 +77,7 @@ public class MapHandler {
 		public Spawnpoint(Location loc) {
 			
 			this.loc = loc;
-			spawnItem();
+			this.spawnItem();
 			this.item.setInvulnerable(true);
 			
 			period = new Task(0, 2) {
@@ -86,6 +91,7 @@ public class MapHandler {
 								count++;
 							}
 						}
+						System.out.println("Count: "+count);
 					} else {
 						spawnItem();
 					}
@@ -97,12 +103,16 @@ public class MapHandler {
 		
 		private void spawnItem() {
 			System.out.println("Spawnpoint was set! ("+loc.toString()+")");
-			this.item = loc.getWorld().dropItemNaturally(loc.add(0.5, 0.5, 0.5), Item.createItem("", "", Material.CAKE_BLOCK, 1, 0));
+			this.item = loc.getWorld().dropItemNaturally(loc.clone().add(0.5, -0.5, 0.5), Item.createItem("", "", Material.TORCH, 1, 0));
 		}
 
 		public void cleanUp() {
 			period.cancel();
 			item.remove();
+		}
+		
+		public Location getLocation() {
+			return loc;
 		}
 
 		@Override

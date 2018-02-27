@@ -28,6 +28,7 @@ import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.mobs.MobType;
 import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.Item;
+import bernhard.scharrer.battlemobs.util.Locations;
 import bernhard.scharrer.battlemobs.util.Task;
 import bernhard.scharrer.battlemobs.util.Tier;
 import de.robingrether.idisguise.disguise.Disguise;
@@ -54,7 +55,6 @@ public class SheepListener extends MobListener {
 	private static final float FEEDING_TIME_REGENERATION_TIMEOUT = 3;
 	private static final double GRAZE_SLOW_RADIUS = 1.5;
 	private static final PotionEffect GRAZE_SLOW = new PotionEffect(PotionEffectType.SLOW, 20, 2);
-	private static final PotionEffect GRAZE_INVISIBLE = new PotionEffect(PotionEffectType.INVISIBILITY, (int) (20+GRAZE_TIMEOUT*20), 0);
 
 	private static List<Player> god_sheeps = new ArrayList<>();
 
@@ -186,7 +186,6 @@ public class SheepListener extends MobListener {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
 
@@ -250,7 +249,6 @@ public class SheepListener extends MobListener {
 						
 						for (Entity nearBy : item.getNearbyEntities(10, 10, 10)) {
 							if (nearBy instanceof Player) {
-								Player p = (Player) nearBy;
 								((CraftPlayer) nearBy).getHandle().playerConnection.sendPacket(particles);
 							}
 						}
@@ -286,8 +284,8 @@ public class SheepListener extends MobListener {
 		new Task(GRAZE_TIMEOUT) {
 			@Override
 			public void run() {
-				p.getWorld().getBlockAt(block.getLocation()).setType(type);
-				p.getWorld().getBlockAt(block.getLocation()).setData(data);
+				Locations.map_world.getBlockAt(block.getLocation()).setType(type);
+				Locations.map_world.getBlockAt(block.getLocation()).setData(data);
 			}
 		};
 	}
