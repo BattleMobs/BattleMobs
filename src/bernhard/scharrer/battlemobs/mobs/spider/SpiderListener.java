@@ -26,6 +26,7 @@ import org.bukkit.potion.PotionEffectType;
 import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.mobs.MobType;
 import bernhard.scharrer.battlemobs.util.Cooldown;
+import bernhard.scharrer.battlemobs.util.DamageHandler;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Task;
 import bernhard.scharrer.battlemobs.util.Tier;
@@ -77,7 +78,7 @@ public class SpiderListener extends MobListener {
 							event.setCancelled(true);
 							LivingEntity lentity = (LivingEntity) event.getEntity();
 							lentity.addPotionEffect(POISON_3S);
-							lentity.damage(EYE_OF_SPIDER_DAMAGE);
+							DamageHandler.deal(lentity, p, EYE_OF_SPIDER_DAMAGE);
 							if (tier >= Tier.TIER_1_3) {
 								lentity.setVelocity(lentity.getEyeLocation().toVector().subtract(p.getLocation().toVector()).normalize().multiply(EYE_OF_SPIDER_KNOCKBACK));
 							}
@@ -94,15 +95,23 @@ public class SpiderListener extends MobListener {
 		if (event.getDamager() instanceof Arrow) {
 			if (event.getEntity() instanceof LivingEntity) {
 				
-				LivingEntity p = (LivingEntity) event.getEntity();
-				event.setCancelled(true);
+				LivingEntity enemy = (LivingEntity) event.getEntity();
 				
 				/*
 				 * eye of the spider ranged
 				 */
 				if (event.getDamager().getCustomName()!=null && event.getDamager().getCustomName().startsWith(ARROW_TAG_HEADER)) {
-					p.addPotionEffect(POISON_3S);
-					p.damage(EYE_OF_SPIDER_ARROW_DAMAGE);
+					
+					String name = event.getDamager().getCustomName().split(";")[1];
+					Player shooter = null;
+					
+					for (Player current : enemy.getWorld().getPlayers()) if (name.equals(current.getName())) {
+						shooter = current;
+						break;
+					}
+					
+					enemy.addPotionEffect(POISON_3S);
+					DamageHandler.deal(enemy, shooter, EYE_OF_SPIDER_ARROW_DAMAGE);
 				}
 			}
 		}
@@ -238,7 +247,7 @@ public class SpiderListener extends MobListener {
 		Arrow arrow = p.getWorld().spawn(p.getEyeLocation().add(0,0.1,0), Arrow.class);
 		arrow.setVelocity(p.getEyeLocation().getDirection().normalize().multiply(EYE_OF_SPIDER_SPEED));
 		arrow.setCustomNameVisible(false);
-		arrow.setCustomName(ARROW_TAG_HEADER);
+		arrow.setCustomName(ARROW_TAG_HEADER+";"+p.getName());
 		arrow.setShooter(p);
 	}
 	
@@ -306,12 +315,12 @@ public class SpiderListener extends MobListener {
 				}
 				
 				@SuppressWarnings("deprecation")
-				private void explode(Player p, org.bukkit.entity.Item item, int tier) {
+				private void explode(Player spider, org.bukkit.entity.Item item, int tier) {
 					
 					if (tier >= Tier.TIER_2_2) {
 						for (Entity enemy : item.getNearbyEntities(WEB_BOMB_RADIUS, WEB_BOMB_RADIUS, WEB_BOMB_RADIUS)) {
-							if (enemy != p && enemy instanceof LivingEntity) {
-								((LivingEntity) enemy).damage(WEB_BOMB_DAMAGE);
+							if (enemy != spider && enemy instanceof LivingEntity) {
+								DamageHandler.deal((LivingEntity) enemy, spider, WEB_BOMB_DAMAGE);
 								if (tier >= Tier.TIER_2_3) {
 									((LivingEntity) enemy).addPotionEffect(POISON_5S);
 								}
@@ -321,8 +330,8 @@ public class SpiderListener extends MobListener {
 					
 					createWebBall(item, WEB_BOMB_RADIUS, tier);
 					item.remove();
-					p.getWorld().playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
-					p.getWorld().playEffect(item.getLocation(), Effect.EXPLOSION_HUGE, 1);
+					spider.getWorld().playSound(spider.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
+					spider.getWorld().playEffect(item.getLocation(), Effect.EXPLOSION_HUGE, 1);
 					cancel();
 				}
 				

@@ -19,6 +19,7 @@ import org.spigotmc.event.entity.EntityDismountEvent;
 import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.mobs.MobType;
 import bernhard.scharrer.battlemobs.util.Cooldown;
+import bernhard.scharrer.battlemobs.util.DamageHandler;
 import bernhard.scharrer.battlemobs.util.Scheduler;
 import bernhard.scharrer.battlemobs.util.Tier;
 import de.robingrether.idisguise.api.PlayerInteractDisguisedPlayerEvent;
@@ -55,7 +56,7 @@ public class PigListener extends MobListener {
 					event.setCancelled(true);
 					if (event.getEntity() instanceof LivingEntity) {
 						LivingEntity lentity = (LivingEntity) event.getEntity();
-						lentity.damage(PORK_DAMAGE);
+						DamageHandler.deal(lentity, p, PORK_DAMAGE);
 					}
 					
 					double max = p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
@@ -149,13 +150,13 @@ public class PigListener extends MobListener {
 	private void hook(Player p, int tier) {
 		for (Entity e : p.getNearbyEntities(HOOK_RADIUS, HOOK_RADIUS, HOOK_RADIUS)) {
 			
-			if (e instanceof Damageable) {
+			if (e instanceof LivingEntity) {
 				
 				e.setVelocity(p.getEyeLocation().toVector().subtract(e.getLocation().toVector()).normalize().multiply(tier>=8?HOOK_POWER*2:HOOK_POWER));
 				
-				if (tier >= 5) {
-					Damageable d = (Damageable) e;
-					d.damage(HOOK_DAMAGE);
+				if (tier >= Tier.TIER_2_2) {
+					LivingEntity d = (LivingEntity) e;
+					DamageHandler.deal(d, p, HOOK_DAMAGE);
 				}
 				
 				if (e instanceof Player) {
@@ -198,7 +199,7 @@ public class PigListener extends MobListener {
 					if (target instanceof LivingEntity) {
 						LivingEntity lentity = (LivingEntity) target;
 						
-						lentity.damage(SADDLE_DAMAGE+(tier>=9?SADDLE_BONUS:0));
+						DamageHandler.deal(lentity, pig, SADDLE_DAMAGE+(tier>=9?SADDLE_BONUS:0));
 						if (tier>=6) lentity.addPotionEffect(SADDLE_EFFECT);
 					}
 					

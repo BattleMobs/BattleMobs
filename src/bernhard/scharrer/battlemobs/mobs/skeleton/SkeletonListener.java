@@ -24,6 +24,7 @@ import org.spigotmc.event.entity.EntityDismountEvent;
 import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.mobs.MobType;
 import bernhard.scharrer.battlemobs.util.Cooldown;
+import bernhard.scharrer.battlemobs.util.DamageHandler;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Locations;
 import bernhard.scharrer.battlemobs.util.Task;
@@ -69,7 +70,7 @@ public class SkeletonListener extends MobListener {
 							}
 							
 							event.getProjectile().setCustomNameVisible(false);
-							event.getProjectile().setCustomName(ARROW_TAG_HEADER+p.getName()+";"+damage+";"+(tier>=Tier.TIER_1_2)+";"+(tier>=Tier.TIER_1_3)+";"+(tier>=Tier.TIER_3_3));
+							event.getProjectile().setCustomName(ARROW_TAG_HEADER+p.getName()+";"+damage+";"+(tier>=Tier.TIER_1_2)+";"+(tier>=Tier.TIER_1_3)+";"+(tier>=Tier.TIER_3_3)+";"+p.getName());
 							event.getBow().setDurability((short) (Material.BOW.getMaxDurability()-1));
 							
 						}
@@ -95,7 +96,14 @@ public class SkeletonListener extends MobListener {
 					
 					String[] data = event.getDamager().getCustomName().split(";");
 					
-					p.damage(Double.parseDouble(data[2]));
+					Player shooter = null;
+					
+					for (Player current : p.getWorld().getPlayers()) if (data[6].equals(current.getName())) {
+						shooter = current;
+						break;
+					}
+					
+					DamageHandler.deal(p, shooter, Double.parseDouble(data[2]));
 					
 					if (Boolean.parseBoolean(data[3]) && !Boolean.parseBoolean(data[5])) {
 						p.addPotionEffect(FLASH);
@@ -149,7 +157,7 @@ public class SkeletonListener extends MobListener {
 							
 							if (e instanceof Player) {
 								Player enemy = (Player) e;
-								spin(enemy, spins, flash);
+								spin(enemy, p, spins, flash);
 							}
 							
 						}
@@ -202,7 +210,7 @@ public class SkeletonListener extends MobListener {
 		}
 	}
 	
-	private void spin(Player enemy, int amount, boolean flash) {
+	private void spin(Player enemy, Player skeleton, int amount, boolean flash) {
 	
 		new Task(0,1) {
 			
@@ -214,7 +222,7 @@ public class SkeletonListener extends MobListener {
 					
 					if (SkeletonListener.this.validEntity(enemy)) {
 						rotateHead(enemy);
-						enemy.damage(BONE_BREAKER_DAMAGE);
+						DamageHandler.deal(enemy, skeleton, BONE_BREAKER_DAMAGE);
 						Locations.map_world.playSound(enemy.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
 						if (flash) enemy.addPotionEffect(FLASH);
 					}

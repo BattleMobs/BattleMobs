@@ -20,6 +20,7 @@ import bernhard.scharrer.battlemobs.BattleMobs;
 import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.mobs.MobType;
 import bernhard.scharrer.battlemobs.util.Cooldown;
+import bernhard.scharrer.battlemobs.util.DamageHandler;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Task;
 import bernhard.scharrer.battlemobs.util.Tier;
@@ -33,6 +34,7 @@ public class ZombieListener extends MobListener {
 	private static final int SWORD_DAMAGE_TIER1 = 4;
 	private static final int SWORD_DAMAGE_TIER2 = 5;
 	private static final int SWORD_DAMAGE_TIER3 = 6;
+	private static final double SWORD_DAMAGE_MODIFIER = 0.4;
 
 	private static final float BLOODRAGE_SPEED = 0.6f;
 	private static final int BLOODRAGE_COOLDOWN_TIER1 = 30;
@@ -71,13 +73,13 @@ public class ZombieListener extends MobListener {
 						LivingEntity lentity = (LivingEntity) event.getEntity();
 						lentity.addPotionEffect(tier >= 4 ? SWORD_SLOW_2 : SWORD_SLOW_1);
 						if (tier >= Tier.TIER_3_1) {
-							lentity.damage(bloodrage.contains(p)? SWORD_DAMAGE_TIER1*0.4:SWORD_DAMAGE_TIER1);
+							DamageHandler.deal(lentity, p, bloodrage.contains(p)? SWORD_DAMAGE_TIER1*SWORD_DAMAGE_MODIFIER:SWORD_DAMAGE_TIER1);
 						}
 						else if (tier >= Tier.TIER_2_2) {
-							lentity.damage(bloodrage.contains(p)? SWORD_DAMAGE_TIER2*0.4:SWORD_DAMAGE_TIER2);
+							DamageHandler.deal(lentity, p, bloodrage.contains(p)? SWORD_DAMAGE_TIER2*SWORD_DAMAGE_MODIFIER:SWORD_DAMAGE_TIER2);
 						}
 						else if (tier >= Tier.TIER_1_2) {
-							lentity.damage(bloodrage.contains(p)? SWORD_DAMAGE_TIER3*0.4:SWORD_DAMAGE_TIER3);
+							DamageHandler.deal(lentity, p, bloodrage.contains(p)? SWORD_DAMAGE_TIER3*SWORD_DAMAGE_MODIFIER:SWORD_DAMAGE_TIER3);
 						}
 
 					}
@@ -196,7 +198,7 @@ public class ZombieListener extends MobListener {
 												} else continue;
 											}
 											enemy.setVelocity(enemy.getEyeLocation().toVector().subtract(p.getLocation().toVector()).normalize().multiply(INNERSTRENGH_FORCE));
-											enemy.damage(INNER_STRENGTH_DAMAGE);
+											DamageHandler.deal(enemy, p, INNER_STRENGTH_DAMAGE);
 											
 										}
 									}

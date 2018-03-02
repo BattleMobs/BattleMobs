@@ -27,8 +27,10 @@ import bernhard.scharrer.battlemobs.BattleMobs;
 import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.mobs.MobType;
 import bernhard.scharrer.battlemobs.util.Cooldown;
+import bernhard.scharrer.battlemobs.util.DamageHandler;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Locations;
+import bernhard.scharrer.battlemobs.util.PlayerDeathListener;
 import bernhard.scharrer.battlemobs.util.Task;
 import bernhard.scharrer.battlemobs.util.Tier;
 import de.robingrether.idisguise.disguise.Disguise;
@@ -40,9 +42,10 @@ public class SheepListener extends MobListener {
 
 	private static final int WOOL_COUNT_SLOT = 3;
 	private static final int WOOL_COUNT_PER_HIT = 1;
+	private static final int WOOL_COUNT_DAMAGE_OFFSET = 5;
 	private static final int WOOL_COUNT_PER_KILL = 5;
 	private static final int WOOL_COUNT_MAX_BASE = 20;
-	private static final double WOOL_COUNT_DAMAGE_MODIFIER = 0.25;
+	private static final double WOOL_COUNT_DAMAGE_MODIFIER = 0.15;
 	private static final ItemStack WOOL_COUNTER = Item.createIngameItem("WOOL COUNTER", Material.WOOL, 0);
 	private static final Material GRAZE_BLOCK_TYPE = Material.GRASS;
 	private static final float GRAZE_TIMEOUT = 3;
@@ -82,7 +85,29 @@ public class SheepListener extends MobListener {
 		GRAZE_BANNED_BLOCKS.add(Material.WALL_SIGN);
 		GRAZE_BANNED_BLOCKS.add(Material.SIGN_POST);
 	}
-
+	
+	public SheepListener() {
+		super();
+		new PlayerDeathListener() {
+			public void onPlayerDeath(Player dead, Player killer) {
+				if (dead != killer && SheepListener.this.valid(killer, MobType.SHEEP)) {
+					
+					int tier = SheepListener.this.getMobTier(killer);
+					int max = getMaxWool(tier);
+					int count;
+					
+					if (killer.getInventory().getItem(WOOL_COUNT_SLOT) != null) {
+						count = killer.getInventory().getItem(WOOL_COUNT_SLOT).getAmount();
+						count = count + WOOL_COUNT_PER_KILL > max ? max : count + WOOL_COUNT_PER_KILL;
+						killer.getInventory().getItem(WOOL_COUNT_SLOT).setAmount(count);
+					} else {
+						killer.getInventory().setItem(WOOL_COUNT_SLOT, WOOL_COUNTER);
+					}
+				}
+			}
+		};
+	}
+	
 	@EventHandler
 	public void onHit(EntityDamageByEntityEvent e) {
 
@@ -115,7 +140,9 @@ public class SheepListener extends MobListener {
 
 							if (e.getEntity() instanceof LivingEntity) {
 								LivingEntity enemy = (LivingEntity) e.getEntity();
-								enemy.damage(WOOL_COUNT_DAMAGE_MODIFIER * count);
+								
+								DamageHandler.deal(enemy, p, WOOL_COUNT_DAMAGE_OFFSET+WOOL_COUNT_DAMAGE_MODIFIER * count);
+								
 							}
 
 						}

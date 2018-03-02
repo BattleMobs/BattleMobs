@@ -27,6 +27,7 @@ import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.mobs.MobMaster;
 import bernhard.scharrer.battlemobs.mobs.MobType;
 import bernhard.scharrer.battlemobs.util.Cooldown;
+import bernhard.scharrer.battlemobs.util.DamageHandler;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Locations;
 import bernhard.scharrer.battlemobs.util.Scoreboard;
@@ -74,8 +75,7 @@ public class VillagerListener extends MobListener {
 				if (tier!=Tier.UNDEFINED && Item.valid(p.getInventory().getItemInMainHand())) {
 					if (p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains(VillagerItems.ABILITY_1_NAME)) {
 						
-						event.setCancelled(true);
-						enemy.damage(BAD_TRADE_DAMAGE);
+						DamageHandler.deal(enemy, p, BAD_TRADE_DAMAGE);
 						
 						Location ploc = p.getLocation();
 						Location eloc = enemy.getLocation();
@@ -109,33 +109,33 @@ public class VillagerListener extends MobListener {
 	
 	private class PaybackCurse {
 		
-		public PaybackCurse(LivingEntity enemy, Player p, int tier) {
+		public PaybackCurse(LivingEntity enemy, Player villager, int tier) {
 			
 			new Task(PAYBACK_TIME) {
 				public void run() {
 					
 					if (enemy!=null && !enemy.isDead()) {
-						enemy.damage(PAYBACK_DAMAGE);
+						DamageHandler.deal(enemy, villager, PAYBACK_DAMAGE);
 						if (tier >= Tier.TIER_2_2) {
 							enemy.addPotionEffect(BLIND_EFFECT);
 						}
 						if (enemy instanceof Player) {
 							Player e = (Player) enemy;
 							PlayerData edata = MobMaster.getPlayerData(e);
-							PlayerData pdata = MobMaster.getPlayerData(p);
+							PlayerData pdata = MobMaster.getPlayerData(villager);
 							int money = tier >= Tier.TIER_2_3 ? 2 : 1;
 							if (edata.getMoney()>=money) {
 								edata.modifyMoney(-1);
 								pdata.modifyMoney(1);
-								p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
-								p.sendMessage("§aYou have stolen "+money+"$ from "+e.getName()+"!");
-								Scoreboard.updateScoreboard(p);
-								e.playSound(p.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
+								villager.playSound(villager.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
+								villager.sendMessage("§aYou have stolen "+money+"$ from "+e.getName()+"!");
+								Scoreboard.updateScoreboard(villager);
+								e.playSound(villager.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
 								e.sendMessage("§cYou have lost "+money+"$...");
 								Scoreboard.updateScoreboard(e);
 							} else {
-								p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
-								p.sendMessage("§cWell... "+e.getName()+" doesn't have a enough money!");
+								villager.playSound(villager.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+								villager.sendMessage("§cWell... "+e.getName()+" doesn't have a enough money!");
 							}
 						}
 					}
@@ -195,6 +195,14 @@ public class VillagerListener extends MobListener {
 			FallingBlock fblock = (FallingBlock) event.getEntity();
 			if (fblock.getMaterial()==Material.ANVIL && fblock.getCustomName().startsWith(ANVIL_TAG)) {
 				String pname = fblock.getCustomName().split("#")[1];
+				
+				Player shooter = null;
+				
+				for (Player current : fblock.getWorld().getPlayers()) if (pname.equals(current.getName())) {
+					shooter = current;
+					break;
+				}
+				
 				int tier = Integer.parseInt(fblock.getCustomName().split("#")[2]);
 				event.setCancelled(true);
 				Location loc = fblock.getLocation();
@@ -229,7 +237,7 @@ public class VillagerListener extends MobListener {
 							}
 						}
 						
-						enemy.damage(ANVIL_DAMAGE);
+						DamageHandler.deal(enemy, shooter, ANVIL_DAMAGE);
 						enemy.addPotionEffect(CONFUSE_EFFECT);
 						enemy.setVelocity(enemy.getEyeLocation().toVector().subtract(fblock.getLocation().toVector()).normalize().multiply(ANVIL_POWER));
 					}
