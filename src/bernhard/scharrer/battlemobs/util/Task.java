@@ -17,7 +17,7 @@ public abstract class Task implements Runnable {
 	}
 	
 	public void cancel() {
-		Scheduler.cancel(task);
+		Bukkit.getScheduler().cancelTask(task);
 	}
 	
 }

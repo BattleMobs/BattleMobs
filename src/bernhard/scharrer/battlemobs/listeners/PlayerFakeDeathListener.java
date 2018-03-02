@@ -25,8 +25,8 @@ import bernhard.scharrer.battlemobs.util.DamageHandler;
 import bernhard.scharrer.battlemobs.util.Locations;
 import bernhard.scharrer.battlemobs.util.MapHandler;
 import bernhard.scharrer.battlemobs.util.PlayerUtils;
-import bernhard.scharrer.battlemobs.util.Scheduler;
 import bernhard.scharrer.battlemobs.util.Scoreboard;
+import bernhard.scharrer.battlemobs.util.Task;
 
 public class PlayerFakeDeathListener extends Listener {
 	
@@ -107,14 +107,12 @@ public class PlayerFakeDeathListener extends Listener {
 		p.addPotionEffect(FLASH);
 		PlayerUtils.updateEXP(p);
 
-		
-		int action = Scheduler.schedule(40,20, new Runnable() {
+		Task period = new Task(2,1) {
 			
 			private int seconds = 5;
 			
 			@Override
 			public void run() {
-				
 				if (p!=null&&p.isOnline()&&p.getWorld().getName().equals(Locations.map_world.getName())&&p.getGameMode()==GameMode.SPECTATOR) {
 					if (seconds>0) {
 						p.resetTitle();
@@ -125,19 +123,22 @@ public class PlayerFakeDeathListener extends Listener {
 				}
 				
 			}
-		});
+		};
 		
-		Scheduler.schedule(140, ()->{
+		new Task(7) {
 			
-			if (p!=null&&p.isOnline()&&p.getWorld().getName().equals(Locations.map_world.getName())&&p.getGameMode()==GameMode.SPECTATOR) {
-				BattleMob mob = MobMaster.getBattleMob(p_mob.getType());
-				PlayerUtils.reset(p);
-				p_data.setCurrent(mob.getType());
-				MapHandler.teleportIntoMap(p, p_mob.getTier(), mob);
+			@Override
+			public void run() {
+				if (p!=null&&p.isOnline()&&p.getWorld().getName().equals(Locations.map_world.getName())&&p.getGameMode()==GameMode.SPECTATOR) {
+					BattleMob mob = MobMaster.getBattleMob(p_mob.getType());
+					PlayerUtils.reset(p);
+					p_data.setCurrent(mob.getType());
+					MapHandler.teleportIntoMap(p, p_mob.getTier(), mob);
+				}
+				period.cancel();
+				
 			}
-			Scheduler.cancel(action);
-			
-		});
+		};
 		
 	}
 	

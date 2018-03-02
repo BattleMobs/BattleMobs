@@ -44,7 +44,7 @@ public class PlayerUtils {
 	public static void receiveLobbyItems(Player p) {
 		p.getInventory().setItem(1, Item.createItem("§b§lINFO", "", Material.NETHER_STAR, 1, 0));
 		p.getInventory().setItem(4, Teleporter.TELEPORTER_ITEM);
-		p.getInventory().setItem(7, Item.createItem("§b§lComing soon!", "", Material.NETHER_STAR, 1, 0));
+		p.getInventory().setItem(7, Item.createItem("§b§lOUR TEAM", "", Material.NETHER_STAR, 1, 0));
 	}
 	
 	public static void teleportToLobby(Player p) {

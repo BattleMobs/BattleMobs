@@ -21,9 +21,9 @@ public class MobInventory {
 		BattleMob mob = MobMaster.getBattleMob(type);
 		
 		if (mob != null) {
-			String title = HEADER+type.toString()+"§8 Level: §b"+data.getLevel()+" §8Tier: §b"+data.getTier()+TRAILER;
+			String title = HEADER+type.toString()+"§8 Level: §3"+data.getLevel()+" §8Tier: §3"+data.getTier()+TRAILER;
 			String play_title = HEADER+type.toString()+"§7 Level§8: §b"+data.getLevel()+" §7Tier§8: §b"+data.getTier()+TRAILER;
-			String details = "§7EXP§8: §b"+data.getEXP()+"#§7Kills§8: §b"+data.getKills()+"#§7Deaths§8: §b"+data.getDeaths();
+			String details = "§7EXP§8: §b"+data.getEXP()+"#§7Kills§8: §b"+data.getKills()+"#§7Deaths§8: §b"+data.getDeaths()+"#§7KDR§8: §b"+String.format("%.3f", ((float)data.getKills()/(data.getDeaths()!=0?data.getDeaths():1)));
 			
 			Inventory inv = Bukkit.createInventory(null, 54, title);
 			

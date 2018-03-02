@@ -21,6 +21,9 @@ public class ItemUtilListener extends Listener {
 						if (item.getItemMeta().getDisplayName().equals(MobItems.LOBBY.getItemMeta().getDisplayName())) {
 							PlayerUtils.teleportToLobby(e.getPlayer());
 						}
+						if (item.getItemMeta().getDisplayName().equals(MobItems.AUTO_RESPAWN_ON.getItemMeta().getDisplayName())) {
+							e.getPlayer().sendMessage("§cThis will be implemented soon...");
+						}
 					}
 				}
 			}

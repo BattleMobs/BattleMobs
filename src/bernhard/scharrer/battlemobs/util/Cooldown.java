@@ -14,7 +14,6 @@ public class Cooldown {
 	private static final Material MATERIAL_COOLDOWN = Material.FIREWORK_CHARGE;
 	
 	private ItemStack item;
-	private int task;
 	private int cooldown;
 	private Cooldown instance;
 	private Player player;
@@ -51,7 +50,7 @@ public class Cooldown {
 					}
 				} else {
 					cooldowns.remove(instance);
-					Scheduler.cancel(task);
+					period_task.cancel();
 				}
 				
 			}
@@ -70,10 +69,6 @@ public class Cooldown {
 				period_task.cancel();
 			}
 		};
-		
-		Scheduler.schedule(cooldown*20, ()->{
-
-		});
 		
 		cooldowns.add(this);
 		

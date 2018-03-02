@@ -2,7 +2,6 @@ package bernhard.scharrer.battlemobs.mobs.pig;
 
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -20,7 +19,7 @@ import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.mobs.MobType;
 import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.DamageHandler;
-import bernhard.scharrer.battlemobs.util.Scheduler;
+import bernhard.scharrer.battlemobs.util.Task;
 import bernhard.scharrer.battlemobs.util.Tier;
 import de.robingrether.idisguise.api.PlayerInteractDisguisedPlayerEvent;
 
@@ -188,26 +187,26 @@ public class PigListener extends MobListener {
 	
 	private class RidingEffect {
 		
-		private int task;
-		
 		public RidingEffect(MobListener context, int tier, Player pig, Entity target) {
 			
-			this.task = Scheduler.schedule(20, 5, ()->{
+			new Task(1,0.25f) {
 				
-				if (context.valid(pig, MobType.PIG) && context.validEntity(target) && pig.getPassengers().contains(target)) {
-					
-					if (target instanceof LivingEntity) {
-						LivingEntity lentity = (LivingEntity) target;
+				@Override
+				public void run() {
+					if (context.valid(pig, MobType.PIG) && context.validEntity(target) && pig.getPassengers().contains(target)) {
 						
-						DamageHandler.deal(lentity, pig, SADDLE_DAMAGE+(tier>=9?SADDLE_BONUS:0));
-						if (tier>=6) lentity.addPotionEffect(SADDLE_EFFECT);
+						if (target instanceof LivingEntity) {
+							LivingEntity lentity = (LivingEntity) target;
+							
+							DamageHandler.deal(lentity, pig, SADDLE_DAMAGE+(tier>=9?SADDLE_BONUS:0));
+							if (tier>=6) lentity.addPotionEffect(SADDLE_EFFECT);
+						}
+						
+					} else {
+						cancel();
 					}
-					
-				} else {
-					Scheduler.cancel(task);
 				}
-				
-			});
+			};
 			
 		}
 		
