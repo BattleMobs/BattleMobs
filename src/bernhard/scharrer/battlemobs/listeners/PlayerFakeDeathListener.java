@@ -10,7 +10,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.potion.PotionEffect;
@@ -22,13 +21,14 @@ import bernhard.scharrer.battlemobs.data.PlayerData;
 import bernhard.scharrer.battlemobs.mobs.BattleMob;
 import bernhard.scharrer.battlemobs.mobs.MobMaster;
 import bernhard.scharrer.battlemobs.util.Cooldown;
+import bernhard.scharrer.battlemobs.util.DamageHandler;
 import bernhard.scharrer.battlemobs.util.Locations;
 import bernhard.scharrer.battlemobs.util.MapHandler;
 import bernhard.scharrer.battlemobs.util.PlayerUtils;
 import bernhard.scharrer.battlemobs.util.Scheduler;
 import bernhard.scharrer.battlemobs.util.Scoreboard;
 
-public class PlayerDeathListener extends Listener {
+public class PlayerFakeDeathListener extends Listener {
 	
 	private static final PotionEffect FLASH = new PotionEffect(PotionEffectType.BLINDNESS, 20, 0);
 	
@@ -50,7 +50,7 @@ public class PlayerDeathListener extends Listener {
 		if (e!=null) { e.setCancelled(true); e.setDamage(0); }
 		p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 		Player k = null;
-		if (e!=null) if (e instanceof EntityDamageByEntityEvent) if (((EntityDamageByEntityEvent) e).getDamager() instanceof Player) k = (Player) ((EntityDamageByEntityEvent) e).getDamager();
+		k = DamageHandler.getLastDamage(p);
 		if (k == null) for (Entity nearby : p.getNearbyEntities(15.0, 15.0, 15.0)) if (nearby instanceof Player) k = (Player) nearby;
 		if (p.getWorld() != Locations.lobby_world) onPlayerDeath(p, k);
 		p.addPotionEffect(FLASH);
@@ -60,6 +60,8 @@ public class PlayerDeathListener extends Listener {
 	 * FAKE DEATH EVENT
 	 */
 	private static void onPlayerDeath(Player p, Player k) {
+		
+		DamageHandler.triggerDeathListeners(p, k);
 		
 		PlayerData p_data=MobMaster.getPlayerData(p);
 		MobData p_mob = p_data.getCurrentData();
