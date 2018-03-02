@@ -11,6 +11,7 @@ import bernhard.scharrer.battlemobs.data.Database;
 import bernhard.scharrer.battlemobs.listeners.Listeners;
 import bernhard.scharrer.battlemobs.mobs.MobMaster;
 import bernhard.scharrer.battlemobs.properties.PluginProperties;
+import bernhard.scharrer.battlemobs.util.DamageHandler;
 import bernhard.scharrer.battlemobs.util.Locations;
 import bernhard.scharrer.battlemobs.util.MapHandler;
 import bernhard.scharrer.battlemobs.util.Teleporter;
@@ -46,6 +47,7 @@ public class BattleMobs extends JavaPlugin {
 		for (Player p : Bukkit.getOnlinePlayers()) p.kickPlayer("§8[§6BattleMobs§8] §7Server is restarting!");
 		MobMaster.cleanUp();
 		MapHandler.cleanUp();
+		DamageHandler.cleanUp();
 		for (Entity e : Locations.map_world.getEntities()) {
 			if (e instanceof LivingEntity && !(e instanceof Player) ) {
 				e.remove();

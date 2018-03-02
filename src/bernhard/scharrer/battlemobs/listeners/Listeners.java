@@ -14,7 +14,7 @@ public class Listeners {
 		new InventoryClickListener();
 		new LeavesDecayListener();
 		new PlayerPickUpListener();
-		new PlayerDeathListener();
+		new PlayerFakeDeathListener();
 		new PlayerDropItemListener();
 //		new PlayerInteractEntityListener());
 //		new PlayerInteractListener());

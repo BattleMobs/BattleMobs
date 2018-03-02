@@ -24,7 +24,7 @@ public class Locations {
 	public static void load() {
 		
 		lobby_world = Bukkit.getWorld("Lobby");
-		map_world = Bukkit.getWorld("Arena");
+		map_world = Bukkit.getWorld("Map");
 		
 		lobby = new Location(lobby_world, 0.5f, 50.5f, 0.5f, 0, 0);
 		pig_statue = new Location(lobby_world, 7.5f, 51f, 28.5f, 135, 0);

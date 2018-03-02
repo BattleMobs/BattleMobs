@@ -3,7 +3,6 @@ package bernhard.scharrer.battlemobs.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,22 +17,24 @@ import bernhard.scharrer.battlemobs.mobs.MobItems;
 
 public class MapHandler {
 	
-	private static List<Location> locations = new ArrayList<>();
 	private static final float TIME_BEFORE_SPAWNING = 5;
 	
 	private static List<Spawnpoint> spawnpoints = new ArrayList<>();
 	
 	public static void loadMap() {
 		
-		locations.add(new Location(Locations.map_world, 264.5f, 5.5f, -189.5f, 180, 0));
-		locations.add(new Location(Locations.map_world, 264.5f, 5.5f, -253.5f, 0, 0));
-		
 		new Task(TIME_BEFORE_SPAWNING) {
 			
 			@Override
 			public void run() {
-				spawnpoints.add(new Spawnpoint(new Location(Locations.map_world, 264.5f, 5.5f, -189.5f, 180, 0)));
-				spawnpoints.add(new Spawnpoint(new Location(Locations.map_world, 264.5f, 5.5f, -253.5f, 0, 0)));
+				spawnpoints.add(new Spawnpoint(new Location(Locations.map_world,-29.287207f,39f,28.76683f,317,-1)));
+				spawnpoints.add(new Spawnpoint(new Location(Locations.map_world,-48.240223f,39f,74.63556f,292,6)));
+				spawnpoints.add(new Spawnpoint(new Location(Locations.map_world,-43.37002f,32f,99.421486f,235,8)));
+				spawnpoints.add(new Spawnpoint(new Location(Locations.map_world,-11.459639f,27f,115.42925f,204,4)));
+				spawnpoints.add(new Spawnpoint(new Location(Locations.map_world,24.404724f,27f,105.49045f,138,0)));
+				spawnpoints.add(new Spawnpoint(new Location(Locations.map_world,39.942154f,27f,69.41202f,87,-2)));
+				spawnpoints.add(new Spawnpoint(new Location(Locations.map_world,29.502686f,38f,40.511993f,47,0)));
+				spawnpoints.add(new Spawnpoint(new Location(Locations.map_world,0.5215505f,28f,27.7152f,12,3)));
 			}
 		};
 		
@@ -43,7 +44,6 @@ public class MapHandler {
 		
 		Collections.sort(spawnpoints);
 		Spawnpoint sp = spawnpoints.get(0);
-		System.out.println(sp.count);
 		Collections.shuffle(spawnpoints);
 		
 		p.teleport(sp.getLocation());
@@ -91,7 +91,6 @@ public class MapHandler {
 								count++;
 							}
 						}
-						System.out.println("Count: "+count);
 					} else {
 						spawnItem();
 					}
@@ -102,8 +101,7 @@ public class MapHandler {
 		}
 		
 		private void spawnItem() {
-			System.out.println("Spawnpoint was set! ("+loc.toString()+")");
-			this.item = loc.getWorld().dropItemNaturally(loc.clone().add(0.5, -0.5, 0.5), Item.createItem("", "", Material.TORCH, 1, 0));
+			this.item = loc.getWorld().dropItemNaturally(loc.clone().add(0.5, -0.5, 0.5), Item.createItem("", "", Material.SEEDS, 1, 0));
 		}
 
 		public void cleanUp() {

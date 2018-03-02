@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import bernhard.scharrer.battlemobs.mobs.MobMaster;
+import bernhard.scharrer.battlemobs.util.DamageHandler;
 import bernhard.scharrer.battlemobs.util.Locations;
 import bernhard.scharrer.battlemobs.util.PlayerUtils;
 import bernhard.scharrer.battlemobs.util.Scoreboard;
@@ -29,7 +30,7 @@ public class PlayerJoinListener extends Listener {
 		
 		Scoreboard.updateScoreboard(p);
 
-		
+		DamageHandler.bind(p);
 		
 		p.teleport(Locations.lobby);
 		
