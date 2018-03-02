@@ -2,13 +2,11 @@ package bernhard.scharrer.battlemobs.listeners;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class PlayerItemDamageListener extends Listener {
 	
-	private ItemStack item, temp;
-	private ItemMeta meta;
+//	private ItemStack item, temp;
+//	private ItemMeta meta;
 	
 	@EventHandler
 	public void onItemDamage(BlockBreakEvent e) {

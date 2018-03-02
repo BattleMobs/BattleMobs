@@ -38,6 +38,9 @@ public class MobListener extends Listener {
 	}
 	
 	public boolean validEntity(Entity entity) {
+		
+		if (entity==null) return false;
+		
 		boolean survival = true;
 		if (entity instanceof Player) survival = ((Player) entity).getGameMode()==GameMode.SURVIVAL;
 		return survival && entity.getWorld().getName().equals(Locations.map_world.getName());

@@ -6,6 +6,8 @@ public class Listeners {
 	 * register listeners
 	 */
 	public static void init() {
+		new AntiBlockInteractListener();
+		new AntiWheatTramplingListener();
 		new AsyncPlayerChatListener();
 		new BlockBreakListener();
 		new BlockPlaceListener();
