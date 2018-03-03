@@ -1,4 +1,4 @@
-package bernhard.scharrer.battlemobs.mobs.slime;
+package bernhard.scharrer.battlemobs.mobs.creeper;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -6,20 +6,20 @@ import org.bukkit.inventory.ItemStack;
 import bernhard.scharrer.battlemobs.mobs.MobItems;
 import bernhard.scharrer.battlemobs.util.Item;
 
-public class SlimeItems implements MobItems {
+public class CreeperItems implements MobItems {
 
-	static final String ABILITY_1_NAME = "Slowball";
-    static final String ABILITY_1_DESC = "Shoots slime balls which#slow your enemies on#succesfull hit (1 heart damage).";
-    static final String ABILITY_2_NAME = "Slimearmy";
-    static final String ABILITY_2_DESC = "Spawns 2 new slimes next to you.#They will fight for you.";
-    static final String ABILITY_3_NAME = "Crazy Jump";
-    static final String ABILITY_3_DESC = "You perform an amazing jump#in the air. Nearby enemies get a really#bad slow (for 3s).";
+	static final String ABILITY_1_NAME = "Creeper Charger";
+    static final String ABILITY_1_DESC = "For every succesful hit your#charge counter increases by 1.#(max. charge count: 10)";
+    static final String ABILITY_2_NAME = "Bolt Rain";
+    static final String ABILITY_2_DESC = "Spawn a lightning for every#enemy in a 5 block radius.#+ you get charged up!";
+    static final String ABILITY_3_NAME = "Creeper Explosion";
+    static final String ABILITY_3_DESC = "Creates an explosion that deals#damage depending on your charge#counter.";
     static final String ABILITY_1_TIER_1_NAME = "";
     static final String ABILITY_1_TIER_1_DESC = "";
     static final String ABILITY_2_TIER_1_NAME = "";
     static final String ABILITY_2_TIER_1_DESC = "";
-    static final String ABILITY_3_TIER_1_NAME = "";
-    static final String ABILITY_3_TIER_1_DESC = "";
+    static final String ABILITY_3_TIER_1_NAME = "Lightning Voltage";
+    static final String ABILITY_3_TIER_1_DESC = "Explosions deals 1.3x damage#when you are charged";
     static final String ABILITY_1_TIER_2_NAME = "";
     static final String ABILITY_1_TIER_2_DESC = "";
     static final String ABILITY_2_TIER_2_NAME = "";
@@ -58,11 +58,11 @@ public class SlimeItems implements MobItems {
 		switch(ability) {
 		
 		case 0:
-			return Item.createIngameItem(ABILITY_1_NAME, Material.SLIME_BALL, 0);
+			return Item.createIngameItem(ABILITY_1_NAME, Material.SKULL, 4);
 		case 1:
-			return Item.createIngameItem(ABILITY_2_NAME, Material.MONSTER_EGG, 55);
+			return Item.createIngameItem(ABILITY_2_NAME, Material.FLINT, 0);
 		case 2:
-			return Item.createIngameItem(ABILITY_3_NAME, Material.SLIME_BLOCK, 0);
+			return Item.createIngameItem(ABILITY_3_NAME, Material.SULPHUR, 0);
 	
 		}
 		

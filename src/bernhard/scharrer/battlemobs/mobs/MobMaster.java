@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import bernhard.scharrer.battlemobs.data.PlayerData;
 import bernhard.scharrer.battlemobs.mobs.chicken.BattleChicken;
+import bernhard.scharrer.battlemobs.mobs.creeper.BattleCreeper;
 import bernhard.scharrer.battlemobs.mobs.pig.BattlePig;
 import bernhard.scharrer.battlemobs.mobs.sheep.BattleSheep;
 import bernhard.scharrer.battlemobs.mobs.skeleton.BattleSkeleton;
@@ -38,6 +39,9 @@ public class MobMaster {
 		battlemobs.add(new BattleChicken());
 		battlemobs.add(new BattleWitch());
 		battlemobs.add(new BattleSlime());
+		
+		
+		battlemobs.add(new BattleCreeper());
 		
 	}
 	

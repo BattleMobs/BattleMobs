@@ -24,6 +24,8 @@ public abstract class MobStatue extends Listener {
 
 	public MobStatue(BattleMob mob) {
 
+		System.out.println("Spawned once!");
+		
 		this.mob = mob;
 		Location loc = mob.getType().getLocation();
 		entity = generateEntity(((CraftWorld)(loc.getWorld())).getHandle());

@@ -39,8 +39,6 @@ public class BattleMobs extends JavaPlugin {
 		Teleporter.init();
 		MobMaster.register();
 		
-		for (Player p : Bukkit.getOnlinePlayers()) p.kickPlayer("§8[§6BattleMobs§8] §7Server is restarting!");
-		
 	} 
 	@Override
 	public void onDisable() {
