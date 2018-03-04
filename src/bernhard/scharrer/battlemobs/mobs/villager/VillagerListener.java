@@ -15,6 +15,7 @@ import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.MaterialData;
@@ -43,14 +44,14 @@ public class VillagerListener extends MobListener {
 	private static final String ANVIL_TAG = "񘿼�8";
 	
 	private static final double PAYBACK_RADIUS = 5.0;
-	private static final int PAYBACK_COOLDOWN = 5;
+	private static final int PAYBACK_COOLDOWN = 15;
 	private static final float PAYBACK_TIME = 3.0f;
 	private static final double PAYBACK_DAMAGE = 6;
 	
 	private static final double ANVIL_RADIUS = 5;
 	private static final double ANVIL_DAMAGE = 10;
 	private static final double ANVIL_POWER = 2.2;
-	private static final int ANVIL_COOLDOWN = 5;
+	private static final int ANVIL_COOLDOWN = 15;
 	
 	private static final PotionEffect CONFUSE_EFFECT = new PotionEffect(PotionEffectType.CONFUSION, 200, 0);
 	private static final PotionEffect BLIND_EFFECT = new PotionEffect(PotionEffectType.BLINDNESS, 60, 0);
@@ -62,6 +63,16 @@ public class VillagerListener extends MobListener {
 	public void onInteract(PlayerInteractEntityEvent event) {
 		if (event.getRightClicked() instanceof Villager) {
 			event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler
+	public void onSpawn(ItemSpawnEvent event) {
+		if (event.getEntity().getWorld().getName().equals(Locations.map_world.getName())) {
+			if (event.getEntity().getItemStack()!=null && event.getEntity().getItemStack().getType()==Material.ANVIL) {
+				event.setCancelled(true);
+				anvilExplode(event.getEntity(), null, Tier.TIER_1_3);
+			}
 		}
 	}
 	
@@ -205,46 +216,65 @@ public class VillagerListener extends MobListener {
 				
 				int tier = Integer.parseInt(fblock.getCustomName().split("#")[2]);
 				event.setCancelled(true);
-				Location loc = fblock.getLocation();
-				PacketPlayOutWorldParticles particles = new PacketPlayOutWorldParticles(EnumParticle.EXPLOSION_LARGE, true, (float) loc.getX(), (float) loc.getY(), (float) loc.getZ(), 1, 0, 0, 0, 0, 0);
-				for (Entity nearBy : fblock.getNearbyEntities(25, 25, 25)) {
-					if (nearBy instanceof Player) {
-						Player p = (Player) nearBy;
-						p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-						p.playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
-						((CraftPlayer) nearBy).getHandle().playerConnection.sendPacket(particles);
-					}
-				}
-				
-				for (Entity nearBy : fblock.getNearbyEntities(ANVIL_RADIUS, ANVIL_RADIUS, ANVIL_RADIUS)) {
-					if (nearBy instanceof LivingEntity) {
-						LivingEntity enemy = (LivingEntity) nearBy;
-						
-						if (enemy.getName()!=null && enemy.getName().equals(pname)) {
-							continue;
-						}
-						if (tier >= Tier.TIER_3_2) {
-							enemy.addPotionEffect(SLOW_EFFECT);
-						}
-						
-						if (tier >= Tier.TIER_3_3 && enemy instanceof Player) {
-							Player e = (Player) enemy;
-							if (e.getHealth() > ANVIL_DAMAGE) {
-								double max_health = e.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
-								if (max_health > 2.5) {
-									e.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(max_health-2);
-								}
-							}
-						}
-						
-						DamageHandler.deal(enemy, shooter, ANVIL_DAMAGE);
-						enemy.addPotionEffect(CONFUSE_EFFECT);
-						enemy.setVelocity(enemy.getEyeLocation().toVector().subtract(fblock.getLocation().toVector()).normalize().multiply(ANVIL_POWER));
-					}
-				}
+				anvilExplode(fblock, shooter, tier);
 				
 			}
 		}
+	}
+	
+	private void anvilExplode(Entity anvil, Player shooter, int tier) {
+		Location loc = anvil.getLocation();
+		PacketPlayOutWorldParticles particles = new PacketPlayOutWorldParticles(EnumParticle.EXPLOSION_LARGE, true, (float) loc.getX(), (float) loc.getY(), (float) loc.getZ(), 1, 0, 0, 0, 0, 0);
+		for (Entity nearBy : anvil.getNearbyEntities(25, 25, 25)) {
+			if (nearBy instanceof Player) {
+				Player p = (Player) nearBy;
+				p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+				p.playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
+				((CraftPlayer) nearBy).getHandle().playerConnection.sendPacket(particles);
+			}
+		}
+		
+		for (Entity nearBy : anvil.getNearbyEntities(ANVIL_RADIUS, ANVIL_RADIUS, ANVIL_RADIUS)) {
+			if (nearBy instanceof LivingEntity) {
+				LivingEntity enemy = (LivingEntity) nearBy;
+				
+				if (enemy == shooter) {
+					continue;
+				}
+				
+				if (shooter == null && isVillager(enemy)) {
+					continue;
+				}
+				
+				if (tier >= Tier.TIER_3_2) {
+					enemy.addPotionEffect(SLOW_EFFECT);
+				}
+				
+				if (tier >= Tier.TIER_3_3 && enemy instanceof Player) {
+					Player e = (Player) enemy;
+					if (e.getHealth() > ANVIL_DAMAGE) {
+						double max_health = e.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+						if (max_health > 2.5) {
+							e.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(max_health-2);
+						}
+					}
+				}
+				
+				DamageHandler.deal(enemy, shooter, ANVIL_DAMAGE);
+				enemy.addPotionEffect(CONFUSE_EFFECT);
+				enemy.setVelocity(enemy.getEyeLocation().toVector().subtract(loc.toVector()).normalize().multiply(ANVIL_POWER));
+			}
+		}
+	}
+
+	private boolean isVillager(LivingEntity enemy) {
+		if (enemy instanceof Player) {
+			return super.checkMob((Player) enemy, MobType.VILLAGER);
+		}
+		else {
+			return false;
+		}
+		
 	}
 	
 	private void rotateHead(Player p) {
