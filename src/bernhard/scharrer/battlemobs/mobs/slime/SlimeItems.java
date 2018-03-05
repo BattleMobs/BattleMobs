@@ -11,7 +11,7 @@ public class SlimeItems implements MobItems {
 	static final String ABILITY_1_NAME = "Slowball";
     static final String ABILITY_1_DESC = "Shoots slime balls which#slow your enemies on#succesfull hit (1 heart damage).";
     static final String ABILITY_2_NAME = "Slimearmy";
-    static final String ABILITY_2_DESC = "Spawns 2 new slimes next to you.#They will fight for you.";
+    static final String ABILITY_2_DESC = "Spawns 2 new slimes next to you.#They will fight for you.#(They despawn after 30s)";
     static final String ABILITY_3_NAME = "Crazy Jump";
     static final String ABILITY_3_DESC = "You perform an amazing jump#in the air. Nearby enemies get a really#bad slow (for 3s).";
     static final String ABILITY_1_TIER_1_NAME = "";

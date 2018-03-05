@@ -14,6 +14,7 @@ public class Cooldown {
 	private static final Material MATERIAL_COOLDOWN = Material.FIREWORK_CHARGE;
 	
 	private ItemStack item;
+	private int slot;
 	private int cooldown;
 	private Cooldown instance;
 	private Player player;
@@ -29,6 +30,7 @@ public class Cooldown {
 		
 		this.player = p;
 		this.cooldown = cooldown;
+		this.slot = slot;
 		this.item = p.getInventory().getItem(slot);
 		this.instance = this;
 		
@@ -72,6 +74,13 @@ public class Cooldown {
 		
 		cooldowns.add(this);
 		
+	}
+	
+	public static boolean hasCooldown(Player p, int slot) {
+		for (Cooldown cooldown : cooldowns) {
+			if (cooldown.player == p && cooldown.slot == slot) return true;
+		}
+		return false;
 	}
 	
 	public static void clearCooldowns(Player p) {

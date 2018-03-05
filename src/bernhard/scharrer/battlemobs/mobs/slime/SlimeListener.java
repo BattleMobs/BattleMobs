@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.EntityEffect;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -20,6 +21,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import bernhard.scharrer.battlemobs.mobs.MobListener;
 import bernhard.scharrer.battlemobs.mobs.MobType;
+import bernhard.scharrer.battlemobs.util.Cooldown;
 import bernhard.scharrer.battlemobs.util.DamageHandler;
 import bernhard.scharrer.battlemobs.util.Item;
 import bernhard.scharrer.battlemobs.util.Task;
@@ -141,12 +143,95 @@ public class SlimeListener extends MobListener {
 	
 	private class SlimeFighter {
 		
+		private static final double SLIMEARMY_TRACK_RADIUS = 25;
+		private static final int SLIMEARMY_SIZE = 5;
+		private static final double SLIMEARMY_HEALTH = 8;
+		private static final float SLIMEARMY_TRACKER = 1.0f;
+		private static final float SLIMEARMY_DECAY = 30.0f;
+		
+		private Slime slime;
+		private Player p;
+		private Task enemy_updater;
+
 		public SlimeFighter(Player p, int tier) {
 			
-			Slime slime = p.getWorld().spawn(p.getLocation(), Slime.class);
+			this.p = p;
 			
-			slime.setT
+			if (!trackNewEnemy(p)) {
+				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_SNARE, 1, 1);
+			} else {
+				
+				if (!Cooldown.hasCooldown(p, 1)) new Cooldown(p, 1, 20);
+				
+				this.slime = p.getWorld().spawn(p.getLocation(), Slime.class);
+				this.slime.setSize(SLIMEARMY_SIZE);
+				this.slime.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(SLIMEARMY_HEALTH);
+				this.slime.setHealth(SLIMEARMY_HEALTH);
+				
+				if (!trackNewEnemy(slime)) {
+					kill();
+				}
+				
+				this.enemy_updater = new Task(SLIMEARMY_TRACKER,SLIMEARMY_TRACKER) {
+					public void run() {
+						if (!trackNewEnemy(slime)) {
+							kill();
+						}
+					}
+				};
+				
+				new Task(SLIMEARMY_DECAY) {
+					public void run() {
+						kill();
+					}
+				};
+				
+			}
 			
+		}
+		
+		private void kill() {
+			enemy_updater.cancel();
+			slime.remove();
+		}
+		
+		private boolean valid() {
+			return slime != null && !slime.isDead();
+		}
+		
+		private boolean trackNewEnemy(Entity relativ) {
+			
+			if (relativ instanceof Slime) {
+				
+				if (valid()) {
+					if (slime.getTarget() == p || slime.getTarget() == null || slime.getTarget().isDead()) {
+						for (Entity nearBy : relativ.getNearbyEntities(SLIMEARMY_TRACK_RADIUS, SLIMEARMY_TRACK_RADIUS, SLIMEARMY_TRACK_RADIUS)) {
+							if (nearBy instanceof LivingEntity && nearBy != p) {
+								if (relativ instanceof Slime) {
+									((Slime) relativ).setTarget((LivingEntity) nearBy);
+								}
+								return true;
+							}
+						}
+					}
+					return true;
+				} 
+				
+			} else {
+				for (Entity nearBy : relativ.getNearbyEntities(SLIMEARMY_TRACK_RADIUS, SLIMEARMY_TRACK_RADIUS, SLIMEARMY_TRACK_RADIUS)) {
+					if (nearBy instanceof LivingEntity && nearBy != p) {
+						return true;
+					}
+				}
+			}
+			
+			return false;
+			
+		}
+
+		private boolean find(Entity relativ) {
+			
+			return false;
 		}
 		
 	}
