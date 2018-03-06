@@ -42,7 +42,7 @@ public class SlimeListener extends MobListener {
 	private static final List<Player> slowball_shooters = new ArrayList<>();
 	private static final float SLOWBALL_TIME_BETWEEN_BURST = 0.4f;
 	private static final double SLOWBALL_DAMAGE = 2;
-	private static final double SLOWBALL_SPREAD = 0.2;
+	private static final double SLOWBALL_SPREAD = 0.1;
 	
 	private static final int SLIMEARMY_COUNT = 2;
 	private static final int SLIMEARMY_BONUS = 3;
@@ -82,8 +82,17 @@ public class SlimeListener extends MobListener {
 						
 						new SlowBall(p, tier);
 						if (tier >= Tier.TIER_1_2) {
-							new SlowBall(p, tier);
-							new SlowBall(p, tier);
+							new Task(0.5f) {
+								private int count = 0;
+								public void run() {
+									count++;
+									if (count==2) {
+										cancel();
+										return;
+									}
+									new SlowBall(p, tier);
+								}
+							};
 						}
 						
 					}

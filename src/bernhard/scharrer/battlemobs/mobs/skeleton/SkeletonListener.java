@@ -2,6 +2,7 @@ package bernhard.scharrer.battlemobs.mobs.skeleton;
 
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -84,6 +85,9 @@ public class SkeletonListener extends MobListener {
 	
 	@EventHandler
 	public void onHit(EntityDamageByEntityEvent event) {
+		
+		Bukkit.broadcastMessage("Do gehts.");
+		
 		if (event.getDamager() instanceof Arrow) {
 			
 			if (event.getEntity() instanceof Player) {

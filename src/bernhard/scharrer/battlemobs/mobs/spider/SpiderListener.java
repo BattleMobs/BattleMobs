@@ -3,6 +3,7 @@ package bernhard.scharrer.battlemobs.mobs.spider;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,6 +17,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -62,8 +64,11 @@ public class SpiderListener extends MobListener {
 	private static final double SPIDER_ARMY_RADIUS = 15;
 	private static final int SPIDER_ARMY_SPIDERS = 3;
 
-	@EventHandler
+	@EventHandler (priority=EventPriority.HIGHEST)
 	public void onHit(EntityDamageByEntityEvent event) {
+		
+		Bukkit.broadcastMessage("???");
+		
 		if (event.getDamager() instanceof Player) {
 			Player p = (Player) event.getDamager();
 			int tier = super.getMobTier(p);
@@ -92,7 +97,12 @@ public class SpiderListener extends MobListener {
 			}
 		}
 		
+		Bukkit.broadcastMessage("1");
+		
 		if (event.getDamager() instanceof Arrow) {
+			
+			Bukkit.broadcastMessage("2");
+			
 			if (event.getEntity() instanceof LivingEntity) {
 				
 				LivingEntity enemy = (LivingEntity) event.getEntity();
@@ -100,6 +110,7 @@ public class SpiderListener extends MobListener {
 				/*
 				 * eye of the spider ranged
 				 */
+				Bukkit.broadcastMessage("Name: "+event.getDamager().getCustomName());
 				if (event.getDamager().getCustomName()!=null && event.getDamager().getCustomName().startsWith(ARROW_TAG_HEADER)) {
 					
 					String name = event.getDamager().getCustomName().split(";")[1];
@@ -112,6 +123,7 @@ public class SpiderListener extends MobListener {
 					
 					enemy.addPotionEffect(POISON_3S);
 					DamageHandler.deal(enemy, shooter, EYE_OF_SPIDER_ARROW_DAMAGE);
+					Bukkit.broadcastMessage("Damage: "+EYE_OF_SPIDER_ARROW_DAMAGE);
 				}
 			}
 		}
