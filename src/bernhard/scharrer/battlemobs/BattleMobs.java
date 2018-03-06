@@ -46,6 +46,11 @@ public class BattleMobs extends JavaPlugin {
 		MobMaster.cleanUp();
 		MapHandler.cleanUp();
 		DamageHandler.cleanUp();
+		for (Entity e : Locations.lobby_world.getEntities()) {
+			if (e instanceof LivingEntity && !(e instanceof Player) ) {
+				e.teleport(Locations.waste_paper_basket);
+			}
+		}
 		for (Entity e : Locations.map_world.getEntities()) {
 			if (e instanceof LivingEntity && !(e instanceof Player) ) {
 				e.remove();

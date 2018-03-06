@@ -3,6 +3,7 @@ package bernhard.scharrer.battlemobs.mobs;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
@@ -24,8 +25,6 @@ public abstract class MobStatue extends Listener {
 
 	public MobStatue(BattleMob mob) {
 
-		System.out.println("Spawned once!");
-		
 		this.mob = mob;
 		Location loc = mob.getType().getLocation();
 		entity = generateEntity(((CraftWorld)(loc.getWorld())).getHandle());
@@ -38,6 +37,9 @@ public abstract class MobStatue extends Listener {
 		entity.setNoAI(true);
 		entity.setSilent(true);
 		entity.setHeadRotation(loc.getYaw());
+		if (entity.getBukkitEntity() instanceof LivingEntity) {
+			((LivingEntity) entity.getBukkitEntity()).setCollidable(false);
+		}
 		((CraftWorld)(loc.getWorld())).addEntity(entity, SpawnReason.CUSTOM);
 		
 	}

@@ -25,6 +25,7 @@ public class PlayerUtils {
 		p.getInventory().setLeggings(null);
 		p.getInventory().setBoots(null);
 		p.setExp(0);
+		p.setCollidable(false);
 		p.setGameMode(GameMode.SURVIVAL);
 		p.setExhaustion(0);
 		p.setLevel(0);

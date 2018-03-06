@@ -14,18 +14,18 @@ public class SlimeItems implements MobItems {
     static final String ABILITY_2_DESC = "Spawns 2 new slimes next to you.#They will fight for you.#(They despawn after 30s)";
     static final String ABILITY_3_NAME = "Crazy Jump";
     static final String ABILITY_3_DESC = "You perform an amazing jump#in the air. Nearby enemies get a really#bad slow (for 3s).";
-    static final String ABILITY_1_TIER_1_NAME = "";
-    static final String ABILITY_1_TIER_1_DESC = "";
-    static final String ABILITY_2_TIER_1_NAME = "";
-    static final String ABILITY_2_TIER_1_DESC = "";
-    static final String ABILITY_3_TIER_1_NAME = "";
-    static final String ABILITY_3_TIER_1_DESC = "";
-    static final String ABILITY_1_TIER_2_NAME = "";
-    static final String ABILITY_1_TIER_2_DESC = "";
-    static final String ABILITY_2_TIER_2_NAME = "";
-    static final String ABILITY_2_TIER_2_DESC = "";
-    static final String ABILITY_3_TIER_2_NAME = "";
-    static final String ABILITY_3_TIER_2_DESC = "";
+    static final String ABILITY_1_TIER_1_NAME = "Triple Shot";
+    static final String ABILITY_1_TIER_1_DESC = "Shoot 3 slowballs instead of one.";
+    static final String ABILITY_2_TIER_1_NAME = "Faster Reproduction";
+    static final String ABILITY_2_TIER_1_DESC = "Reduce cooldown by 10s.";
+    static final String ABILITY_3_TIER_1_NAME = "Quiet Escape";
+    static final String ABILITY_3_TIER_1_DESC = "You get invisible for 3s#when you perform a jump.";
+    static final String ABILITY_1_TIER_2_NAME = "Recovery";
+    static final String ABILITY_1_TIER_2_DESC = "50% lifesteal effect.";
+    static final String ABILITY_2_TIER_2_NAME = "Army Upgrade";
+    static final String ABILITY_2_TIER_2_DESC = "Spawn 3 slimes instead of 2#and double despawn time.";
+    static final String ABILITY_3_TIER_2_NAME = "Out Of Action";
+    static final String ABILITY_3_TIER_2_DESC = "Nearby enemies get liftet#in the air for 3s.";
 	
 	@Override
 	public ItemStack getMobInventoryItem(int tier) {

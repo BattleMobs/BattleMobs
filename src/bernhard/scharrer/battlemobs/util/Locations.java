@@ -10,6 +10,7 @@ public class Locations {
 	public static World map_world;
 	
 	public static Location lobby;
+	public static Location waste_paper_basket;
 	
 	public static Location pig_statue;
 	public static Location zombie_statue;
@@ -30,6 +31,7 @@ public class Locations {
 		map_world = Bukkit.getWorld("Map");
 		
 		lobby = new Location(lobby_world, 0.5f, 50.5f, 0.5f, 0, 0);
+		waste_paper_basket = new Location(lobby_world, 7.5f, 40.5f, 0.5f, 91, -6);
 		
 		pig_statue = new Location(lobby_world, 7.5f, 51f, 28.5f, 135, 0);
 		zombie_statue = new Location(lobby_world, 5.5f, 51f, 31.5f, 165, 0);
@@ -42,7 +44,7 @@ public class Locations {
 		witch_statue = new Location(lobby_world, -30.5f, 51f, 5.5f, 255, 0);
 		slime_statue = new Location(lobby_world, -31.5f, 51f, 2.5f, 270, 0);
 		
-		
+
 		creeper_statue = new Location(lobby_world, -27.5f, 51f, -6.5f, 315, 0);
 	}
 	

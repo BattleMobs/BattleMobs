@@ -50,30 +50,29 @@ public class PigListener extends MobListener {
 				int tier = super.getMobTier(p);
 				ItemStack hand = p.getInventory().getItemInMainHand();
 				
-				if (tier != Tier.UNDEFINED && hand!=null && hand.getItemMeta()!=null&&hand.getItemMeta().getDisplayName().contains(PigItems.ABILITY_1_NAME)) {
-					
-					event.setCancelled(true);
-					if (event.getEntity() instanceof LivingEntity) {
-						LivingEntity lentity = (LivingEntity) event.getEntity();
-						DamageHandler.deal(lentity, p, PORK_DAMAGE);
-					}
-					
-					double max = p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-					double heal = PORK_DAMAGE*(tier>=Tier.TIER_1_2?PORK_LIFESTEAL_2:PORK_LIFESTEAL_1);
-					
-					if (p.getHealth()+heal>=max) {
-						p.setHealth(max);
-					} else {
-						p.setHealth(p.getHealth()+heal);
-					}
-					
-					if (tier >= Tier.TIER_1_3) {
-						event.getEntity().setFireTicks(20*PORK_BURN_SECONDS);	
-					}
-					
-				} else event.setCancelled(true);
-				
-			
+			if (tier != Tier.UNDEFINED && hand != null && hand.getItemMeta() != null
+					&& hand.getItemMeta().getDisplayName().contains(PigItems.ABILITY_1_NAME)) {
+
+				event.setCancelled(true);
+				if (event.getEntity() instanceof LivingEntity) {
+					LivingEntity lentity = (LivingEntity) event.getEntity();
+					DamageHandler.deal(lentity, p, PORK_DAMAGE);
+				}
+
+				double max = p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+				double heal = PORK_DAMAGE * (tier >= Tier.TIER_1_2 ? PORK_LIFESTEAL_2 : PORK_LIFESTEAL_1);
+
+				if (p.getHealth() + heal >= max) {
+					p.setHealth(max);
+				} else {
+					p.setHealth(p.getHealth() + heal);
+				}
+
+				if (tier >= Tier.TIER_1_3) {
+					event.getEntity().setFireTicks(20 * PORK_BURN_SECONDS);
+				}
+
+			}
 		}
 		
 	}

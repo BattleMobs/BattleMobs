@@ -1,7 +1,5 @@
 package bernhard.scharrer.battlemobs.mobs.slime;
 
-import org.bukkit.entity.Slime;
-
 import bernhard.scharrer.battlemobs.mobs.BattleMob;
 import bernhard.scharrer.battlemobs.mobs.MobStatue;
 import net.minecraft.server.v1_12_R1.EntityInsentient;
@@ -17,7 +15,8 @@ public class SlimeStatue extends MobStatue {
 	@Override
 	protected EntityInsentient generateEntity(WorldServer world) {
 		EntitySlime slime = new EntitySlime(world);
-		((Slime)slime.getBukkitEntity()).setSize(2);
+		slime.setSize(2, true);
+//		((Slime)slime.getBukkitEntity()).setSize(2);
 		return slime;
 	}
 	

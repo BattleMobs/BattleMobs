@@ -25,6 +25,8 @@ public class BattleSlime extends BattleMob {
 	}
 
 	@Override
-	public void init(Player p) {}
+	public void init(Player p) {
+		p.setWalkSpeed(0.2f);
+	}
 
 }
